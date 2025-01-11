@@ -4,39 +4,28 @@ import net.achille.myrestaurant.model.MenuDuJour;
 import net.achille.myrestaurant.repository.MenuDuJourRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-import java.util.Optional;
+import java.util.List;
 
 @Service
-@Transactional
 public class MenuDuJourService {
-
     @Autowired
     private MenuDuJourRepository menuDuJourRepository;
 
-    public MenuDuJour saveMenuDuJour(MenuDuJour menuDuJour) {
-        if (menuDuJour.getDate() == null) {
-            menuDuJour.setDate(LocalDate.now());
-        }
-        return menuDuJourRepository.save(menuDuJour);
+    public List<MenuDuJour> getAllMenus() {
+        return menuDuJourRepository.findAll();
     }
 
-    public MenuDuJour getMenuDuJour() {
-        return menuDuJourRepository.findByDateAndActifTrue(LocalDate.now())
-                .orElseThrow(() -> new RuntimeException("Aucun menu du jour disponible"));
+    public MenuDuJour getMenuById(Long id) {
+        return menuDuJourRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Menu non trouvé avec l'id: " + id));
     }
 
-    public Optional<MenuDuJour> getLatestMenuDuJour() {
-        return menuDuJourRepository.findTopByOrderByDateDesc();
+    public MenuDuJour createMenu(MenuDuJour menu) {
+        menu.setActif(true);
+        return menuDuJourRepository.save(menu);
     }
 
-    public void deleteMenuDuJour(Long id) {
+    public void deleteMenu(Long id) {
         menuDuJourRepository.deleteById(id);
-    }
-
-    public Optional<MenuDuJour> getMenuDuJour(LocalDate date) {
-        return menuDuJourRepository.findByDateAndActifTrue(date);
     }
 }

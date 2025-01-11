@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>My Restaurant</title>
+  <link rel="stylesheet" href="/css/styles.css">
+
+
+
+</head>
+<body>
+<div id="restaurant-info"></div>
+
+<h1>Nos Entrées</h1>
+<div id="entrees"></div>
+
+
+<h1>Nos Plats</h1>
+<div id="plats"></div>
+
+<h1>Menu</h1>
+<div id="menu"></div>
+
+<h1>Nos Desserts</h1>
+<div id="desserts"></div>
+
+<h1>Catégories</h1>
+<div id="categories"></div>
+
+
+
+
+<script>
+  async function fetchRestaurantInfo() {
+    try {
+      const response = await fetch('http://localhost:8080/api/restaurant/info');
+      const restaurant = await response.json();
+
+      const infoHTML = `
+                    <h2>${restaurant.nom}</h2>
+                    <p>${restaurant.description}</p>
+                    <p>Adresse : ${restaurant.adresse}</p>
+                    <p>Téléphone : ${restaurant.telephone}</p>
+                    <p>Ville : ${restaurant.ville}</p>
+                    <p>${restaurant.presentationText}</p>
+
+                    <h3>Heures d'ouverture :</h3>
+                    <ul>
+                        ${Object.entries(restaurant.heuresOuverture)
+              .map(([jour, horaires]) =>
+                      `<li>${jour} : ${horaires}</li>`
+              ).join('')}
+                    </ul>
+                `;
+
+      document.getElementById('restaurant-info').innerHTML = infoHTML;
+    } catch (error) {
+      console.error('Erreur :', error);
+    }
+  }
+
+
+  async function getPlats() {
+    try {
+      const response = await fetch('http://localhost:8080/api/plats');
+      const plats = await response.json();
+      console.log("Plats reçus:", plats);
+
+      const platsDiv = document.getElementById('plats');
+      platsDiv.innerHTML = ''; // Vide le contenu existant
+
+      plats.forEach(plat => {
+        // Utilise une image par défaut si plat.image n'existe pas
+        const imageUrl = plat.image || '/chemin/vers/image-par-defaut.jpg';
+
+        const platHTML = `
+        <div class="plat-card">
+          <img src="${imageUrl}" alt="${plat.nom}" onerror="this.src=''">
+          <h3>${plat.nom}</h3>
+          <p class="description">${plat.description || ''}</p>
+          <div class="prix">${plat.prix} €</div>
+        </div>
+      `;
+
+        platsDiv.innerHTML += platHTML;
+      });
+    } catch (error) {
+      console.error('Erreur lors du chargement des plats:', error);
+      const platsDiv = document.getElementById('plats');
+      platsDiv.innerHTML = '<p>Erreur lors du chargement des plats</p>';
+    }
+  }
+
+
+  async function getEntrees() {
+    try {
+      const response = await fetch('http://localhost:8080/api/entrees');
+      const entrees = await response.json();
+      console.log("Entrées reçues:", entrees);
+
+      const entreesDiv = document.getElementById('entrees'); // Changé pour utiliser la div 'entrees'
+      entreesDiv.innerHTML = '';
+
+      entrees.forEach(entree => {
+        const platHTML = `
+      <div class="plat-card">
+        <h3>${entree.nom}</h3>
+        <p class="description">${entree.description || ''}</p>
+        <div class="prix">${entree.prix} €</div>
+      </div>
+    `;
+
+        entreesDiv.innerHTML += platHTML;
+      });
+    } catch (error) {
+      console.error('Erreur lors du chargement des entrées:', error);
+      const entreesDiv = document.getElementById('entrees');
+      entreesDiv.innerHTML = '<p>Erreur lors du chargement des entrées</p>';
+    }
+  }
+
+
+  async function getDesserts() {
+    try {
+      const response = await fetch('http://localhost:8080/api/desserts');
+      const desserts = await response.json();
+      console.log("Desserts reçus:", desserts);
+
+      const dessertsDiv = document.getElementById('desserts');
+      dessertsDiv.innerHTML = '';
+
+      desserts.forEach(dessert => {
+        const dessertHTML = `
+      <div class="plat-card">
+        <h3>${dessert.nom}</h3>
+        <p class="description">${dessert.description || ''}</p>
+        <div class="prix">${dessert.prix} €</div>
+      </div>
+    `;
+
+        dessertsDiv.innerHTML += dessertHTML;
+      });
+    } catch (error) {
+      console.error('Erreur lors du chargement des desserts:', error);
+      const dessertsDiv = document.getElementById('desserts');
+      dessertsDiv.innerHTML = '<p>Erreur lors du chargement des desserts</p>';
+    }
+  }
+
+
+  async function getCategories() {
+    try {
+      const response = await fetch('http://localhost:8080/api/categories');
+      const categories = await response.json();
+      console.log("Catégories reçues:", categories);
+
+      // Trier les catégories par ordre d'affichage
+      const categoriesTriees = categories.sort((a, b) => a.ordreAffichage - b.ordreAffichage);
+
+      let html = '';
+      categoriesTriees.forEach(categorie => {
+        html += `
+                        <div class="category-container">
+                            <h2 class="category-title">${categorie.nom}</h2>
+                            <p class="category-description">${categorie.description}</p>
+                        </div>
+                    `;
+      });
+
+      document.getElementById('categories').innerHTML = html;
+    } catch (error) {
+      console.error('Erreur lors du chargement des catégories:', error);
+      document.getElementById('categories').innerHTML =
+              '<p style="color: red;">Erreur lors du chargement des catégories.</p>';
+    }
+  }
+
+  async function getMenus() {
+    try {
+      const response = await fetch('http://localhost:8080/api/menu');
+      const menus = await response.json();
+      console.log("Menus reçus:", menus);
+
+      const menuContainer = document.getElementById('menu');
+      menuContainer.className = 'menu-grid';
+
+      let html = '';
+      menus.forEach(menu => {
+        html += `
+                <div class="menu-card">
+
+                    <div class="menu-header">
+                        <img src="${menu.image || ''}"
+                             alt="${menu.nom}"
+                             onerror="this.src=''">
+                    </div>
+                    <div class="menu-content">
+                        <h3 class="menu-title">${menu.nom}</h3>
+                        <div class="menu-description">
+                            ${menu.description.split('\n').map(line => `<p>${line}</p>`).join('')}
+                        </div>
+                        <div class="menu-footer">
+                            <p class="menu-price">${menu.prix} €</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+      });
+
+      menuContainer.innerHTML = html;
+
+      // Ajouter des écouteurs d'événements pour les boutons
+      document.querySelectorAll('.menu-button').forEach(button => {
+        button.addEventListener('click', (e) => {
+          e.preventDefault();
+          // Ajoutez ici la logique pour commander
+          console.log('Menu commandé');
+        });
+      });
+
+    } catch (error) {
+      console.error('Erreur lors du chargement des menus:', error);
+      document.getElementById('menu').innerHTML =
+              '<p class="error-message">Erreur lors du chargement des menus.</p>';
+    }
+  }
+
+
+  getCategories();
+  getPlats();
+  fetchRestaurantInfo();
+  getMenus();
+  getEntrees();
+  getDesserts();
+</script>
+</body>
+</html>

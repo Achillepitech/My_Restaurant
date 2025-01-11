@@ -1,10 +1,12 @@
 package net.achille.myrestaurant.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.LocalDate;
 
 @Entity
 @Data
@@ -15,22 +17,8 @@ public class MenuDuJour {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private LocalDate date;
-
-    @ManyToOne
-    @JoinColumn(name = "entree_id")
-    private Plat entree;
-
-    @ManyToOne
-    @JoinColumn(name = "plat_principal_id")
-    private Plat platPrincipal;
-
-    @ManyToOne
-    @JoinColumn(name = "dessert_id")
-    private Plat dessert;
-
+    private String nom;
+    private String description;
     private Double prix;
-
-    private boolean actif = true;
+    private Boolean actif;
 }

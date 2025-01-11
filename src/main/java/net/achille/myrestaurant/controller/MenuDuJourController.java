@@ -5,67 +5,38 @@ import net.achille.myrestaurant.service.MenuDuJourService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/menu")
-@CrossOrigin(origins = "*")
+@CrossOrigin("*")
 public class MenuDuJourController {
-
     @Autowired
     private MenuDuJourService menuDuJourService;
 
-    // Récupérer le menu du jour actuel
-    // GET http://localhost:8080/api/menu/today
-    @GetMapping("/today")
-    public ResponseEntity<MenuDuJour> getMenuDuJour() {
-        return ResponseEntity.ok(menuDuJourService.getMenuDuJour());
+    // Obtenir tous les menus
+    @GetMapping
+    public ResponseEntity<List<MenuDuJour>> getAllMenus() {
+        return ResponseEntity.ok(menuDuJourService.getAllMenus());
     }
 
-    // Créer un nouveau menu du jour
-    // POST http://localhost:8080/api/menu
-    // Body:
-    // {
-    //    "date": "2025-01-08",
-    //    "entree": {
-    //        "id": 2
-    //    },
-    //    "platPrincipal": {
-    //        "id": 1
-    //    },
-    //    "dessert": {
-    //        "id": 5
-    //    },
-    //    "prix": 29.90
-    // }
+    // Obtenir un menu spécifique
+    @GetMapping("/{id}")
+    public ResponseEntity<MenuDuJour> getMenuById(@PathVariable Long id) {
+        return ResponseEntity.ok(menuDuJourService.getMenuById(id));
+    }
+
+    // Créer un nouveau menu
     @PostMapping
-    public ResponseEntity<MenuDuJour> createMenu(@RequestBody MenuDuJour menuDuJour) {
-        return ResponseEntity.ok(menuDuJourService.saveMenuDuJour(menuDuJour));
-    }
-
-    // Mettre à jour un menu existant
-    // PUT http://localhost:8080/api/menu/1
-    @PutMapping("/{id}")
-    public ResponseEntity<MenuDuJour> updateMenu(@PathVariable Long id, @RequestBody MenuDuJour menuDuJour) {
-        menuDuJour.setId(id);
-        return ResponseEntity.ok(menuDuJourService.saveMenuDuJour(menuDuJour));
+    public ResponseEntity<MenuDuJour> createMenu(@RequestBody MenuDuJour menu) {
+        return ResponseEntity.ok(menuDuJourService.createMenu(menu));
     }
 
     // Supprimer un menu
-    // DELETE http://localhost:8080/api/menu/1
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteMenu(@PathVariable Long id) {
-        menuDuJourService.deleteMenuDuJour(id);
+    public ResponseEntity<Void> deleteMenu(@PathVariable Long id) {
+        menuDuJourService.deleteMenu(id);
         return ResponseEntity.ok().build();
     }
-
-    // Récupérer le dernier menu créé
-    // GET http://localhost:8080/api/menu/latest
-    @GetMapping("/latest")
-    public ResponseEntity<MenuDuJour> getLatestMenu() {
-        return menuDuJourService.getLatestMenuDuJour()
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
 }
+
