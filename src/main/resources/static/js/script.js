@@ -147,7 +147,8 @@ async function getDesserts() {
         desserts.forEach(dessert => {
             const dessertHTML = `
                 <div class="plat-card">
-                    ${dessert.image ? `<div class="plat-image">
+                    ${dessert.image ? `<div class="images/rest.png">
+">
                         <img src="${dessert.image}" alt="${dessert.nom}" 
                              onerror="this.style.display='none'">
                     </div>` : ''}
