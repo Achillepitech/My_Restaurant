@@ -24,8 +24,8 @@
 <h1>Nos Desserts</h1>
 <div id="desserts"></div>
 
-<h1>Catégories</h1>
-<div id="categories"></div>
+<!--<h1>Catégories</h1>-->
+<!--<div id="categories"></div>-->
 
 
 
@@ -67,10 +67,9 @@
       console.log("Plats reçus:", plats);
 
       const platsDiv = document.getElementById('plats');
-      platsDiv.innerHTML = ''; // Vide le contenu existant
+      platsDiv.innerHTML = '';
 
       plats.forEach(plat => {
-        // Utilise une image par défaut si plat.image n'existe pas
         const imageUrl = plat.image || '/chemin/vers/image-par-defaut.jpg';
 
         const platHTML = `
@@ -98,7 +97,7 @@
       const entrees = await response.json();
       console.log("Entrées reçues:", entrees);
 
-      const entreesDiv = document.getElementById('entrees'); // Changé pour utiliser la div 'entrees'
+      const entreesDiv = document.getElementById('entrees');
       entreesDiv.innerHTML = '';
 
       entrees.forEach(entree => {
@@ -148,13 +147,12 @@
   }
 
 
-  async function getCategories() {
+/*  async function getCategories() {
     try {
       const response = await fetch('http://localhost:8080/api/categories');
       const categories = await response.json();
       console.log("Catégories reçues:", categories);
 
-      // Trier les catégories par ordre d'affichage
       const categoriesTriees = categories.sort((a, b) => a.ordreAffichage - b.ordreAffichage);
 
       let html = '';
@@ -174,7 +172,7 @@
               '<p style="color: red;">Erreur lors du chargement des catégories.</p>';
     }
   }
-
+*/
   async function getMenus() {
     try {
       const response = await fetch('http://localhost:8080/api/menu');
@@ -209,12 +207,10 @@
 
       menuContainer.innerHTML = html;
 
-      // Ajouter des écouteurs d'événements pour les boutons
       document.querySelectorAll('.menu-button').forEach(button => {
         button.addEventListener('click', (e) => {
           e.preventDefault();
-          // Ajoutez ici la logique pour commander
-          console.log('Menu commandé');
+        
         });
       });
 
@@ -226,7 +222,7 @@
   }
 
 
-  getCategories();
+  //getCategories();
   getPlats();
   fetchRestaurantInfo();
   getMenus();

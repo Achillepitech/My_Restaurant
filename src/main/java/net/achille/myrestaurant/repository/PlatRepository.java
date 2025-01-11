@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface PlatRepository extends JpaRepository<Plat, Long> {
     // Méthodes personnalisées pour rechercher des plats
-    List<Plat> findByCategory_Id(Long categoryId);
+    List<Plat> findByCategory(String category);
     List<Plat> findByMenuDuJour(boolean isMenuDuJour);
 }

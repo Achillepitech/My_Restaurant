@@ -29,9 +29,7 @@ public class Plat {
     @Column(name = "allergene")
     private List<String> allergenes = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
+    private String category;
 
     private boolean menuDuJour;
     private boolean actif = true;

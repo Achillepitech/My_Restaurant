@@ -18,8 +18,8 @@ public class PlatService {
         return platRepository.findAll();
     }
 
-    public List<Plat> getPlatsByCategory(Long categoryId) {
-        return platRepository.findByCategory_Id(categoryId);
+    public List<Plat> getPlatsByCategory(String category) {
+        return platRepository.findByCategory(category);
     }
 
     public List<Plat> getPlatsMenuDuJour() {
