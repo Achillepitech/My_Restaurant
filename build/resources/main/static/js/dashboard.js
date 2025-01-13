@@ -1,9 +1,3 @@
-
-
-
-
-
-
 // URL de l'API avec les autres constantes
 const API_INFO_URL = 'http://localhost:8080/api/restaurant/info';
 
@@ -119,17 +113,6 @@ document.getElementById('updateInfoForm').addEventListener('submit', async (e) =
         alert('Erreur lors de la mise à jour des informations du restaurant');
     }
 });
-
-
-
-
-
-
-
-
-
-
-
 
 
 // URL de base de l'API
@@ -270,8 +253,6 @@ async function deletePlat(id) {
 // nos entree
 
 
-
-
 // URL de base de l'API pour les entrées
 const API_ENTREES_URL = 'http://localhost:8080/api/entrees';
 
@@ -322,14 +303,14 @@ function displayEntrees(entrees) {
 
     // Ajouter les écouteurs d'événements pour les boutons
     document.querySelectorAll('.edit-entree').forEach(button => {
-        button.addEventListener('click', function() {
-            const { id, nom, prix, description } = this.dataset;
+        button.addEventListener('click', function () {
+            const {id, nom, prix, description} = this.dataset;
             showEditEntreeForm(id, nom, prix, description);
         });
     });
 
     document.querySelectorAll('.delete-entree').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const id = this.dataset.id;
             deleteEntree(id);
         });
@@ -436,7 +417,6 @@ async function deleteEntree(id) {
 }
 
 
-
 // Ajouter l'URL de l'API des desserts avec les autres URLs en haut du fichier
 const API_DESSERTS_URL = 'http://localhost:8080/api/desserts';
 
@@ -493,14 +473,14 @@ function displayDesserts(desserts) {
 
     // Ajouter les écouteurs d'événements pour les boutons
     document.querySelectorAll('.edit-dessert').forEach(button => {
-        button.addEventListener('click', function() {
-            const { id, nom, prix, description } = this.dataset;
+        button.addEventListener('click', function () {
+            const {id, nom, prix, description} = this.dataset;
             showEditDessertForm(id, nom, prix, description);
         });
     });
 
     document.querySelectorAll('.delete-dessert').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const id = this.dataset.id;
             deleteDessert(id);
         });
@@ -598,23 +578,6 @@ async function deleteDessert(id) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // Ajouter l'URL de l'API des menus avec les autres URLs en haut du fichier
 const API_MENU_URL = 'http://localhost:8080/api/menu';
 
@@ -672,14 +635,14 @@ function displayMenus(menus) {
 
     // Ajouter les écouteurs d'événements pour les boutons
     document.querySelectorAll('.edit-menu').forEach(button => {
-        button.addEventListener('click', function() {
-            const { id, nom, prix, description } = this.dataset;
+        button.addEventListener('click', function () {
+            const {id, nom, prix, description} = this.dataset;
             showEditMenuForm(id, nom, prix, description);
         });
     });
 
     document.querySelectorAll('.delete-menu').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const id = this.dataset.id;
             deleteMenu(id);
         });
@@ -775,3 +738,19 @@ async function deleteMenu(id) {
         }
     }
 }
+
+
+    function showSection(sectionId) {
+    // Cacher toutes les sections
+    document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
+    });
+
+    // Afficher la section sélectionnée
+    document.getElementById(sectionId).classList.add('active');
+}
+
+    // Afficher la première section par défaut
+    window.onload = function() {
+    showSection('info-section');
+};

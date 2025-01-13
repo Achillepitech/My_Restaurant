@@ -7,18 +7,28 @@
 
 </head>
 <body>
-<div class="container">
-    <h1>Dashboard </h1>
+<!-- Ajout de la navbar -->
+<nav class="navbar">
+    <ul>
+        <li><a href="#info" onclick="showSection('info-section')">Informations</a></li>
+        <li><a href="#entrees" onclick="showSection('entrees-section')">Entrées</a></li>
+        <li><a href="#plats" onclick="showSection('plats-section')">Plats</a></li>
+        <li><a href="#desserts" onclick="showSection('desserts-section')">Desserts</a></li>
+        <li><a href="#menus" onclick="showSection('menus-section')">Menus</a></li>
+        <li><a href="http://localhost:8080/" style="background-color: #4CAF50; border-radius: 4px;">Voir le site</a></li>
+    </ul>
+</nav>
 
 
+    <!-- ################################# info ##################################### -->
 
+<div id="info-section" class="section">
     <div class="container">
         <h2>Gestion des informations du restaurant</h2>
-
-        <!-- Bloc Modification Info -->
         <div class="crud-block">
             <h2>Informations du restaurant</h2>
             <form id="updateInfoForm">
+
                 <div class="form-group">
                     <label>Nom du restaurant</label>
                     <input type="text" id="infoNom" required>
@@ -79,19 +89,19 @@
                 <button type="submit" class="btn btn-primary">Mettre à jour</button>
             </form>
         </div>
-
-        <!-- Bloc Affichage Info -->
         <div class="crud-block">
             <h2>Aperçu des informations</h2>
             <div id="infoList" class="plat-liste"></div>
         </div>
     </div>
+</div>
 
     <!-- ################################# entree ##################################### -->
 
 
 
-    <!-- Bloc Gestion des Entrées -->
+<!-- Section Entrées -->
+<div id="entrees-section" class="section">
     <div class="container">
         <h2>Gestion des entrées</h2>
 
@@ -143,12 +153,16 @@
             </form>
         </div>
     </div>
+</div>
+
 
 
 
     <!-- ################################# plats ##################################### -->
 
-    <h2> Gestion des plats</h2>
+<div id="plats-section" class="section">
+    <div class="container">
+        <h2>Gestion des plats</h2>
 
     <!-- Bloc Ajout -->
     <div class="crud-block">
@@ -198,14 +212,17 @@
         </form>
     </div>
 </div>
+</div>
+
 
 
 <!-- ################################# Desserts ##################################### -->
 
 
 <!-- Bloc Gestion des Desserts -->
-<div class="container">
-    <h2>Gestion des desserts</h2>
+<div id="desserts-section" class="section">
+    <div class="container">
+        <h2>Gestion des desserts</h2>
 
     <!-- Bloc Ajout Dessert -->
     <div class="crud-block">
@@ -255,16 +272,20 @@
         </form>
     </div>
 </div>
+</div>
 
 
 
 
+
+<!-- ################################# menus ##################################### -->
 
 
 
 <!-- Bloc Gestion des Menus -->
-<div class="container">
-    <h2>Gestion des menus</h2>
+<div id="menus-section" class="section">
+    <div class="container">
+        <h2>Gestion des menus</h2>
 
     <!-- Bloc Ajout Menu -->
     <div class="crud-block">
@@ -314,6 +335,13 @@
         </form>
     </div>
 </div>
+</div>
+
+
+
+
+<!-- ################################# fin block ##################################### -->
+
 
 <script src="/js/dashboard.js"></script>
 

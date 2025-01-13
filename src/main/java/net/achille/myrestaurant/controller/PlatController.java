@@ -21,7 +21,6 @@ public class PlatController {
         return platService.getAllPlats();
     }
 
-    // Updated to use String category instead of categoryId
     @GetMapping("/category/{category}")
     public List<Plat> getPlatsByCategory(@PathVariable String category) {
         return platService.getPlatsByCategory(category);
