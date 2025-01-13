@@ -6,12 +6,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
-    @GetMapping("src/main/resources/templates/index.html")
+    @GetMapping("/")
     public String home() {
         return "index";
     }
 
-    // Add this to handle the error page
+    @GetMapping("/dashboard")
+    public String dashboard() {
+        return "dashboard";
+    }
+
     @GetMapping("/error")
     public String handleError() {
         return "index";

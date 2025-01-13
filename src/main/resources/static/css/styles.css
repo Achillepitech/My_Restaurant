@@ -15,14 +15,13 @@ html {
     overflow-y: scroll;
 }
 
-section {
+/* section {
     scroll-snap-align: start;
     scroll-snap-stop: always;
 }
 
 .banner-section, .info-section, .menu-section {
-}
-
+} */
 
 body {
     font-family: 'Inter', sans-serif;
