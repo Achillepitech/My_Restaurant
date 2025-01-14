@@ -1,3 +1,13 @@
+
+
+const params = new URLSearchParams(window.location.search);
+const userId = params.get('userid');
+console.log(userId)
+
+
+
+
+
 // URL de l'API avec les autres constantes
 const API_INFO_URL = 'http://localhost:8080/api/restaurant/info';
 
@@ -579,7 +589,7 @@ async function deleteDessert(id) {
 
 
 // Ajouter l'URL de l'API des menus avec les autres URLs en haut du fichier
-const API_MENU_URL = 'http://localhost:8080/api/menu';
+const API_MENU_URL = 'http://localhost:8080/managers/' + userId + '/restaurant/menus';
 
 // Ajouter l'appel à loadMenus() dans le DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {

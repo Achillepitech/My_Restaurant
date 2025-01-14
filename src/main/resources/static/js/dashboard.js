@@ -1,3 +1,13 @@
+
+
+const params = new URLSearchParams(window.location.search);
+const userId = params.get('userid');
+console.log(userId)
+
+
+
+
+
 // URL de l'API avec les autres constantes
 const API_INFO_URL = 'http://localhost:8080/api/restaurant/info';
 
@@ -577,9 +587,10 @@ async function deleteDessert(id) {
     }
 }
 
+// ============= GESTION DES MENUS =============
 
 // Ajouter l'URL de l'API des menus avec les autres URLs en haut du fichier
-const API_MENU_URL = 'http://localhost:8080/api/menu';
+const API_MENU_URL = 'http://localhost:8080/managers/' + userId + '/restaurant/menus'; // badalt hethy l ghodwa
 
 // Ajouter l'appel à loadMenus() dans le DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
@@ -589,7 +600,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadMenus();
 });
 
-// ============= GESTION DES MENUS =============
+
 
 // Fonction pour charger tous les menus
 async function loadMenus() {

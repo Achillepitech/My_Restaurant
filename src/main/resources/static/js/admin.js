@@ -1,3 +1,9 @@
+
+
+
+
+
+
 // URLs de l'API
 const API_MANAGERS_URL = 'http://localhost:8080/managers';
 
@@ -8,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     showSection('managers-section');
 });
 
-// ============= GESTION DES MANAGERS =============
+// ============= GESTION DES MANAGERS ============= //
 
 // Charger tous les managers
 async function loadManagers() {
@@ -372,3 +378,5 @@ async function deleteEntree(id) {
         }
     }
 }
+
+

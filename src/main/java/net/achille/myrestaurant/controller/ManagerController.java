@@ -120,11 +120,6 @@ public class ManagerController {
     }
 
 
-
-
-
-
-
     @GetMapping("/{managerId}/restaurant")
     public ResponseEntity<RestaurantInfo> getManagerRestaurant(@PathVariable Long managerId) {
         Optional<User> manager = managerService.getManagerById(managerId);
@@ -329,3 +324,6 @@ public class ManagerController {
         return ResponseEntity.noContent().build();
     }
 }
+
+
+//
