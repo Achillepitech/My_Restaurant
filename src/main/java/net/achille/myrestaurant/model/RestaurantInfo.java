@@ -1,5 +1,6 @@
 package net.achille.myrestaurant.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,19 +22,19 @@ public class RestaurantInfo {
     private String description;
     private String adresse;
     private String telephone;
-
-    @ElementCollection
-    private Map<String, String> horaires = new HashMap<>();
-
     private String ville;
 
     @Column(length = 1000)
     private String presentationText;
 
-    // Pour les horaires d'ouverture
     @ElementCollection
     @CollectionTable(name = "restaurant_horaires")
     @MapKeyColumn(name = "jour")
     @Column(name = "heures")
     private Map<String, String> heuresOuverture = new HashMap<>();
+
+    @OneToOne
+    @JoinColumn(name = "manager_id")
+    @JsonIgnoreProperties({"managedRestaurant", "entrees", "plats", "desserts", "menusDuJour"})
+    private User manager;
 }

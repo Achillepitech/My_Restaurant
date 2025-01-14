@@ -27,6 +27,9 @@ public class PlatService {
     }
 
     public Plat savePlat(Plat plat) {
+        if (plat.getMenuDuJour() == null) {
+            plat.setMenuDuJour(false); // valeur par défaut
+        }
         return platRepository.save(plat);
     }
 

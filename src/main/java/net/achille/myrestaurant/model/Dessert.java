@@ -17,4 +17,8 @@ public class Dessert {
     private Double prix;
     @Column(length = 1000)
     private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "manager_id", referencedColumnName = "id")
+    private User manager;
 }

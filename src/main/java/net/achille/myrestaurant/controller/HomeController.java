@@ -20,4 +20,11 @@ public class HomeController {
     public String handleError() {
         return "index";
     }
+
+
+    @GetMapping("/admin")
+    public String admin() {
+        return "admin";
+    }
+
 }

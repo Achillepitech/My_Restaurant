@@ -1,0 +1,47 @@
+.restaurant-liste {
+    margin-top: 20px;
+}
+
+.restaurant-item {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.restaurant-item h3 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.restaurant-item p {
+    margin-bottom: 10px;
+}
+
+.horaires {
+    margin-top: 15px;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 5px;
+}
+
+.horaires h4 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.horaires ul {
+    list-style: none;
+    padding: 0;
+}
+
+.horaires li {
+    margin-bottom: 5px;
+}
+
+.restaurant-actions {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}

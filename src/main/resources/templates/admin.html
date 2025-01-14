@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard Manager</title>
+  <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <ul>
+    <li><a href="#managers" onclick="showSection('managers-section')">Managers</a></li>
+    <li><a href="#info" onclick="showSection('info-section')">Restaurant Info</a></li>
+    <li><a href="#entrees" onclick="showSection('entrees-section')">Entrées</a></li>
+    <li><a href="#plats" onclick="showSection('plats-section')">Plats</a></li>
+    <li><a href="#desserts" onclick="showSection('desserts-section')">Desserts</a></li>
+    <li><a href="http://localhost:8080/" style="background-color: #4CAF50; border-radius: 4px;">Voir le site</a></li>
+  </ul>
+</nav>
+
+<!-- Section Managers -->
+<div id="managers-section" class="section">
+  <div class="container">
+    <h2>Gestion des Managers</h2>
+    <!-- Contenu à venir -->
+  </div>
+</div>
+
+<!-- Section Restaurant Info -->
+<div id="info-section" class="section">
+  <div class="container">
+    <h2>Informations du Restaurant</h2>
+    <!-- Contenu à venir -->
+  </div>
+</div>
+
+
+
+<!-- Section Entrées -->
+<div id="entrees-section" class="section">
+  <div class="container">
+    <h2>Gestion des entrées</h2>
+
+    <!-- Bloc Ajout Entrée -->
+    <div class="crud-block">
+      <h2>Ajouter une entrée</h2>
+      <form id="addEntreeForm">
+        <div class="form-group">
+          <label>Nom de l'entrée</label>
+          <input type="text" id="nomEntree" required>
+        </div>
+        <div class="form-group">
+          <label>Prix (€)</label>
+          <input type="number" id="prixEntree" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="descriptionEntree" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Ajouter</button>
+      </form>
+    </div>
+
+    <!-- Bloc Liste Entrées -->
+    <div class="crud-block">
+      <h2>Liste des entrées</h2>
+      <div id="entreeList" class="plat-liste"></div>
+    </div>
+
+    <!-- Bloc Modification Entrée -->
+    <div class="crud-block" id="editEntreeForm" style="display: none;">
+      <h2>Modifier l'entrée</h2>
+      <form id="updateEntreeForm">
+        <input type="hidden" id="editEntreeId">
+        <div class="form-group">
+          <label>Nom de l'entrée</label>
+          <input type="text" id="editEntreeNom" required>
+        </div>
+        <div class="form-group">
+          <label>Prix (€)</label>
+          <input type="number" id="editEntreePrix" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="editEntreeDescription" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Sauvegarder</button>
+        <button type="button" class="btn btn-danger" onclick="hideEditEntreeForm()">Annuler</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<script src="/js/admin.js"></script>
+
+</body>
+</html>

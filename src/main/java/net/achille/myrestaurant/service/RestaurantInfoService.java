@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 public class RestaurantInfoService {
@@ -33,5 +35,13 @@ public class RestaurantInfoService {
             info.setId(existingInfo.getId());
         }
         return restaurantInfoRepository.save(info);
+    }
+
+    public Optional<RestaurantInfo> getRestaurantById(Long restaurantId) {
+        return restaurantInfoRepository.findById(restaurantId);
+    }
+
+    public void deleteRestaurant(Long restaurantId) {
+        restaurantInfoRepository.deleteById(restaurantId);
     }
 }

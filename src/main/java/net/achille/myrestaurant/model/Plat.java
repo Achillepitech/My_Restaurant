@@ -5,9 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Data
 @NoArgsConstructor
@@ -18,19 +15,16 @@ public class Plat {
     private Long id;
 
     private String nom;
+    private Double prix;
 
     @Column(length = 1000)
     private String description;
 
-    private Double prix;
-
-    @ElementCollection
-    @CollectionTable(name = "plat_allergenes")
-    @Column(name = "allergene")
-    private List<String> allergenes = new ArrayList<>();
-
     private String category;
 
-    private boolean menuDuJour;
-    private boolean actif = true;
+    private Boolean menuDuJour;
+
+    @ManyToOne
+    @JoinColumn(name = "manager_id")
+    private User manager;
 }
