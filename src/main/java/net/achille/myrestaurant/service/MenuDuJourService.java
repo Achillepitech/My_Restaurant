@@ -13,6 +13,11 @@ public class MenuDuJourService {
 
     public List<MenuDuJour> getAllMenus() {
         return menuDuJourRepository.findAll();
+
+    }
+
+    public List<MenuDuJour> getMenusByManagerId(Long managerId) {  // Ajouter cette méthode
+        return menuDuJourRepository.findByManagerId(managerId);
     }
 
     public MenuDuJour getMenuById(Long id) {

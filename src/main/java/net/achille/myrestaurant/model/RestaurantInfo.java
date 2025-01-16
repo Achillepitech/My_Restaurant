@@ -34,7 +34,7 @@ public class RestaurantInfo {
     private Map<String, String> heuresOuverture = new HashMap<>();
 
     @OneToOne
-    @JoinColumn(name = "manager_id")
+    @JoinColumn(name = "manager_id", unique = true)
     @JsonIgnoreProperties({"managedRestaurant", "entrees", "plats", "desserts", "menusDuJour"})
     private User manager;
 }

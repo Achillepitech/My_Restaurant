@@ -15,14 +15,11 @@ public class Plat {
     private Long id;
 
     private String nom;
+    private String description;
     private Double prix;
 
-    @Column(length = 1000)
-    private String description;
-
-    private String category;
-
-    private Boolean menuDuJour;
+    @Column(nullable = false)
+    private Boolean actif = true;
 
     @ManyToOne
     @JoinColumn(name = "manager_id")

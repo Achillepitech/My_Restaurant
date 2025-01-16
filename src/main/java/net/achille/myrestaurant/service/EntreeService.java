@@ -5,7 +5,6 @@ import net.achille.myrestaurant.repository.EntreeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service
@@ -16,6 +15,10 @@ public class EntreeService {
 
     public List<Entree> getAllEntrees() {
         return entreeRepository.findAll();
+    }
+
+    public List<Entree> getEntreesByManagerId(Long managerId) {
+        return entreeRepository.findByManagerId(managerId);
     }
 
     public Entree saveEntree(Entree entree) {

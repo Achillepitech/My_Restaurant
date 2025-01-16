@@ -18,17 +18,13 @@ public class PlatService {
         return platRepository.findAll();
     }
 
-    public List<Plat> getPlatsByCategory(String category) {
-        return platRepository.findByCategory(category);
-    }
-
-    public List<Plat> getPlatsMenuDuJour() {
-        return platRepository.findByMenuDuJour(true);
+    public List<Plat> getPlatsByManagerId(Long managerId) {
+        return platRepository.findByManager_Id(managerId);
     }
 
     public Plat savePlat(Plat plat) {
-        if (plat.getMenuDuJour() == null) {
-            plat.setMenuDuJour(false); // valeur par défaut
+        if (plat.getActif() == null) {
+            plat.setActif(true);  // Définir la valeur par défaut si non spécifiée
         }
         return platRepository.save(plat);
     }
@@ -36,4 +32,6 @@ public class PlatService {
     public void deletePlat(Long id) {
         platRepository.deleteById(id);
     }
+
+
 }

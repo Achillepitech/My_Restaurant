@@ -27,4 +27,24 @@ public class HomeController {
         return "admin";
     }
 
+    @GetMapping("/plats")
+    public String plats() {
+        return "plats";
+    }
+
+    @GetMapping("/entree")
+    public String entree() {
+        return "entree";
+    }
+
+    @GetMapping("/dessert")
+    public String dessert() {
+        return "dessert";
+    }
+
+    @GetMapping("/menu")
+    public String menu() {
+        return "menu";
+    }
+
 }

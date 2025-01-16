@@ -2,348 +2,386 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Restaurant</title>
-    <link rel="stylesheet" href="/css/dashboard.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
 </head>
 <body>
-<!-- Ajout de la navbar -->
-<nav class="navbar">
-    <ul>
-        <li><a href="#info" onclick="showSection('info-section')">Informations</a></li>
-        <li><a href="#entrees" onclick="showSection('entrees-section')">Entrées</a></li>
-        <li><a href="#plats" onclick="showSection('plats-section')">Plats</a></li>
-        <li><a href="#desserts" onclick="showSection('desserts-section')">Desserts</a></li>
-        <li><a href="#menus" onclick="showSection('menus-section')">Menus</a></li>
-        <li><a href="http://localhost:8080/" style="background-color: #4CAF50; border-radius: 4px;">Voir le site</a></li>
-    </ul>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark position-fixed w-100 top-0 start-0 z-3 ">
+
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Dashboard Restaurant</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link active" href="#admin">Admin</a></li>
+                <li class="nav-item"><a class="nav-link" href="#entrees">Entrées</a></li>
+                <li class="nav-item"><a class="nav-link" href="#plats">Plats</a></li>
+                <li class="nav-item"><a class="nav-link" href="#desserts">Desserts</a></li>
+                <li class="nav-item"><a class="nav-link" href="#menus">Menus</a></li>
+            </ul>
+        </div>
+    </div>
 </nav>
 
+<!-- Contenu -->
+<div class="container mt-4">
+    <section id="admin" class="mb-5">
+        <h2>Informations du Restaurant</h2>
 
-    <!-- ################################# info ##################################### -->
-
-<div id="info-section" class="section">
-    <div class="container">
-        <h2>Gestion des informations du restaurant</h2>
-        <div class="crud-block">
-            <h2>Informations du restaurant</h2>
-            <form id="updateInfoForm">
-
-                <div class="form-group">
-                    <label>Nom du restaurant</label>
-                    <input type="text" id="infoNom" required>
-                </div>
-                <div class="form-group">
-                    <label>Description</label>
-                    <textarea id="infoDescription" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Adresse</label>
-                    <input type="text" id="infoAdresse" required>
-                </div>
-                <div class="form-group">
-                    <label>Ville</label>
-                    <input type="text" id="infoVille" required>
-                </div>
-                <div class="form-group">
-                    <label>Téléphone</label>
-                    <input type="tel" id="infoTelephone" required>
-                </div>
-                <div class="form-group">
-                    <label>Texte de présentation</label>
-                    <textarea id="infoPresentationText" required></textarea>
-                </div>
-
-                <div class="horaires-section">
-                    <h3>Horaires d'ouverture</h3>
-                    <div class="form-group">
-                        <label>Lundi</label>
-                        <input type="text" id="horairesLundi" placeholder="ex: 12h-14h, 19h-22h">
-                    </div>
-                    <div class="form-group">
-                        <label>Mardi</label>
-                        <input type="text" id="horairesMardi" placeholder="ex: 12h-14h, 19h-22h">
-                    </div>
-                    <div class="form-group">
-                        <label>Mercredi</label>
-                        <input type="text" id="horairesMercredi" placeholder="ex: 12h-14h, 19h-22h">
-                    </div>
-                    <div class="form-group">
-                        <label>Jeudi</label>
-                        <input type="text" id="horairesJeudi" placeholder="ex: 12h-14h, 19h-22h">
-                    </div>
-                    <div class="form-group">
-                        <label>Vendredi</label>
-                        <input type="text" id="horairesVendredi" placeholder="ex: 12h-14h, 19h-22h">
-                    </div>
-                    <div class="form-group">
-                        <label>Samedi</label>
-                        <input type="text" id="horairesSamedi" placeholder="ex: 12h-14h, 19h-22h">
-                    </div>
-                    <div class="form-group">
-                        <label>Dimanche</label>
-                        <input type="text" id="horairesDimanche" placeholder="ex: 12h-14h, 19h-22h">
-                    </div>
-                </div>
-
-                <button type="submit" class="btn btn-primary">Mettre à jour</button>
-            </form>
-        </div>
-        <div class="crud-block">
-            <h2>Aperçu des informations</h2>
-            <div id="infoList" class="plat-liste"></div>
-        </div>
-    </div>
-</div>
-
-    <!-- ################################# entree ##################################### -->
-
-
-
-<!-- Section Entrées -->
-<div id="entrees-section" class="section">
-    <div class="container">
-        <h2>Gestion des entrées</h2>
-
-        <!-- Bloc Ajout Entrée -->
-        <div class="crud-block">
-            <h2>Ajouter une entrée</h2>
-            <form id="addEntreeForm">
-                <div class="form-group">
-                    <label>Nom de l'entrée</label>
-                    <input type="text" id="nomEntree" required>
-                </div>
-                <div class="form-group">
-                    <label>Prix (€)</label>
-                    <input type="number" id="prixEntree" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label>Description</label>
-                    <textarea id="descriptionEntree" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Ajouter</button>
-            </form>
+        <div class="alert alert-info">
+            Manager ID: <span id="debugManagerId"></span>
+            <br>
+            API URL: <span id="debugApiUrl"></span>
         </div>
 
-        <!-- Bloc Liste Entrées -->
-        <div class="crud-block">
-            <h2>Liste des entrées</h2>
-            <div id="entreeList" class="plat-liste"></div>
+        <!-- Formulaire Restaurant -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Informations du Restaurant</h3>
+            </div>
+            <div class="card-body">
+                <form id="restaurantForm">
+                    <input type="hidden" id="restaurantId">
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="nom" class="form-label">Nom du Restaurant</label>
+                            <input type="text" class="form-control" id="nom" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="ville" class="form-label">Ville</label>
+                            <input type="text" class="form-control" id="ville">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="adresse" class="form-label">Adresse</label>
+                        <input type="text" class="form-control" id="adresse">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="telephone" class="form-label">Téléphone</label>
+                        <input type="tel" class="form-control" id="telephone">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" rows="3"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="presentationText" class="form-label">Texte de Présentation</label>
+                        <textarea class="form-control" id="presentationText" rows="3"></textarea>
+                    </div>
+
+                    <!-- Informations Manager -->
+                    <div class="card mt-4 mb-3">
+                        <div class="card-header">
+                            <h4>Informations Manager</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="managerUsername" readonly>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="managerEmail" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-primary" onclick="loadRestaurantInfo()">Recharger</button>
+                        <button type="button" class="btn btn-warning" onclick="updateRestaurant()">Mettre à jour</button>
+                    </div>
+                </form>
+            </div>
         </div>
 
-        <!-- Bloc Modification Entrée -->
-        <div class="crud-block" id="editEntreeForm" style="display: none;">
-            <h2>Modifier l'entrée</h2>
-            <form id="updateEntreeForm">
-                <input type="hidden" id="editEntreeId">
-                <div class="form-group">
-                    <label>Nom de l'entrée</label>
-                    <input type="text" id="editEntreeNom" required>
-                </div>
-                <div class="form-group">
-                    <label>Prix (€)</label>
-                    <input type="number" id="editEntreePrix" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label>Description</label>
-                    <textarea id="editEntreeDescription" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Sauvegarder</button>
-                <button type="button" class="btn btn-danger" onclick="hideEditEntreeForm()">Annuler</button>
-            </form>
+        <!-- Zone de réponse -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Statut</h3>
+            </div>
+            <div class="card-body">
+                <pre id="apiResponse" class="bg-light p-3"></pre>
+            </div>
         </div>
-    </div>
+
+
+
+    </section>
+
+    <section id="entrees" class="mb-5">
+
+        <!-- Liste des entrées -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">Liste des Entrées</h3>
+                <button class="btn btn-primary" onclick="showAddForm()">Ajouter une entrée</button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Description</th>
+                            <th>Prix</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="entreesTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Formulaire Entrée -->
+        <div class="modal fade" id="entreeModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalTitle">Ajouter/Modifier une entrée</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="entreeForm">
+                            <input type="hidden" id="entreeId">
+                            <div class="mb-3">
+                                <label for="entreeNom" class="form-label">Nom de l'entrée</label>
+                                <input type="text" class="form-control" id="entreeNom" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="entreeDescription" class="form-label">Description</label>
+                                <textarea class="form-control" id="entreeDescription" rows="3" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="entreePrix" class="form-label">Prix</label>
+                                <input type="number" class="form-control" id="entreePrix" step="0.01" required>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button type="button" class="btn btn-primary" onclick="saveEntree()">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <section id="plats" class="mb-5">
+        <!-- Liste des plats -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">Liste des Plats</h3>
+                <button class="btn btn-primary" onclick="showAddPlatForm()">Ajouter un plat</button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Description</th>
+                            <th>Prix</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="platsTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Formulaire Plat -->
+        <div class="modal fade" id="platModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalPlatTitle">Ajouter/Modifier un plat</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="platForm">
+                            <input type="hidden" id="platId">
+                            <div class="mb-3">
+                                <label for="platNom" class="form-label">Nom du plat</label>
+                                <input type="text" class="form-control" id="platNom" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="platDescription" class="form-label">Description</label>
+                                <textarea class="form-control" id="platDescription" rows="3" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="platPrix" class="form-label">Prix</label>
+                                <input type="number" class="form-control" id="platPrix" step="0.01" required>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="platActif">
+                                <label class="form-check-label" for="platActif">Actif</label>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button type="button" class="btn btn-primary" onclick="savePlat()">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="desserts" class="mb-5">
+
+
+
+        <!-- Liste des desserts -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">Liste des Desserts</h3>
+                <button class="btn btn-primary" onclick="showAddDessertForm()">Ajouter un dessert</button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Description</th>
+                            <th>Prix</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="dessertsTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Formulaire Dessert -->
+        <div class="modal fade" id="dessertModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalDessertTitle">Ajouter/Modifier un dessert</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="dessertForm">
+                            <input type="hidden" id="dessertId">
+                            <div class="mb-3">
+                                <label for="dessertNom" class="form-label">Nom du dessert</label>
+                                <input type="text" class="form-control" id="dessertNom" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="dessertDescription" class="form-label">Description</label>
+                                <textarea class="form-control" id="dessertDescription" rows="3" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="dessertPrix" class="form-label">Prix</label>
+                                <input type="number" class="form-control" id="dessertPrix" step="0.01" required>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button type="button" class="btn btn-primary" onclick="saveDessert()">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+
+    <section id="menus" class="mb-5">
+
+        <!-- Le contenu de menu.html sera intégré ici -->
+
+
+        <!-- Liste des menus -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">Liste des Menus du Jour</h3>
+                <button class="btn btn-primary" onclick="showAddMenuForm()">Ajouter un menu</button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Description</th>
+                            <th>Prix</th>
+                            <th>Actif</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="menusTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Formulaire Menu -->
+        <div class="modal fade" id="menuModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalMenuTitle">Ajouter/Modifier un menu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="menuForm">
+                            <input type="hidden" id="menuId">
+                            <div class="mb-3">
+                                <label for="menuNom" class="form-label">Nom du menu</label>
+                                <input type="text" class="form-control" id="menuNom" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="menuDescription" class="form-label">Description</label>
+                                <textarea class="form-control" id="menuDescription" rows="3" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="menuPrix" class="form-label">Prix</label>
+                                <input type="number" class="form-control" id="menuPrix" step="0.01" required>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="menuActif" checked>
+                                <label class="form-check-label" for="menuActif">Menu actif</label>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button type="button" class="btn btn-primary" onclick="saveMenu()">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </section>
 </div>
 
-
-
-
-    <!-- ################################# plats ##################################### -->
-
-<div id="plats-section" class="section">
-    <div class="container">
-        <h2>Gestion des plats</h2>
-
-    <!-- Bloc Ajout -->
-    <div class="crud-block">
-        <h2>Ajouter un plat</h2>
-        <form id="addForm">
-            <div class="form-group">
-                <label>Nom du plat</label>
-                <input type="text" id="nom" required>
-            </div>
-            <div class="form-group">
-                <label>Prix (€)</label>
-                <input type="number" id="prix" step="0.01" required>
-            </div>
-            <div class="form-group">
-                <label>Description</label>
-                <textarea id="description" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Ajouter</button>
-        </form>
-    </div>
-
-    <!-- Bloc Liste -->
-    <div class="crud-block">
-        <h2>Liste des plats</h2>
-        <div id="platList" class="plat-liste"></div>
-    </div>
-
-    <!-- Bloc Modification -->
-    <div class="crud-block" id="editForm">
-        <h2>Modifier le plat</h2>
-        <form id="updateForm">
-            <input type="hidden" id="editId">
-            <div class="form-group">
-                <label>Nom du plat</label>
-                <input type="text" id="editNom" required>
-            </div>
-            <div class="form-group">
-                <label>Prix (€)</label>
-                <input type="number" id="editPrix" step="0.01" required>
-            </div>
-            <div class="form-group">
-                <label>Description</label>
-                <textarea id="editDescription" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Sauvegarder</button>
-            <button type="button" class="btn btn-danger" onclick="hideEditForm()">Annuler</button>
-        </form>
-    </div>
-</div>
-</div>
-
-
-
-<!-- ################################# Desserts ##################################### -->
-
-
-<!-- Bloc Gestion des Desserts -->
-<div id="desserts-section" class="section">
-    <div class="container">
-        <h2>Gestion des desserts</h2>
-
-    <!-- Bloc Ajout Dessert -->
-    <div class="crud-block">
-        <h2>Ajouter un dessert</h2>
-        <form id="addDessertForm">
-            <div class="form-group">
-                <label>Nom du dessert</label>
-                <input type="text" id="nomDessert" required>
-            </div>
-            <div class="form-group">
-                <label>Prix (€)</label>
-                <input type="number" id="prixDessert" step="0.01" required>
-            </div>
-            <div class="form-group">
-                <label>Description</label>
-                <textarea id="descriptionDessert" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Ajouter</button>
-        </form>
-    </div>
-
-    <!-- Bloc Liste Desserts -->
-    <div class="crud-block">
-        <h2>Liste des desserts</h2>
-        <div id="dessertList" class="plat-liste"></div>
-    </div>
-
-    <!-- Bloc Modification Dessert -->
-    <div class="crud-block" id="editDessertForm" style="display: none;">
-        <h2>Modifier le dessert</h2>
-        <form id="updateDessertForm">
-            <input type="hidden" id="editDessertId">
-            <div class="form-group">
-                <label>Nom du dessert</label>
-                <input type="text" id="editDessertNom" required>
-            </div>
-            <div class="form-group">
-                <label>Prix (€)</label>
-                <input type="number" id="editDessertPrix" step="0.01" required>
-            </div>
-            <div class="form-group">
-                <label>Description</label>
-                <textarea id="editDessertDescription" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Sauvegarder</button>
-            <button type="button" class="btn btn-danger" onclick="hideEditDessertForm()">Annuler</button>
-        </form>
-    </div>
-</div>
-</div>
-
-
-
-
-
-<!-- ################################# menus ##################################### -->
-
-
-
-<!-- Bloc Gestion des Menus -->
-<div id="menus-section" class="section">
-    <div class="container">
-        <h2>Gestion des menus</h2>
-
-    <!-- Bloc Ajout Menu -->
-    <div class="crud-block">
-        <h2>Ajouter un menu</h2>
-        <form id="addMenuForm">
-            <div class="form-group">
-                <label>Nom du menu</label>
-                <input type="text" id="nomMenu" required>
-            </div>
-            <div class="form-group">
-                <label>Prix (€)</label>
-                <input type="number" id="prixMenu" step="0.01" required>
-            </div>
-            <div class="form-group">
-                <label>Description</label>
-                <textarea id="descriptionMenu" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Ajouter</button>
-        </form>
-    </div>
-
-    <!-- Bloc Liste Menus -->
-    <div class="crud-block">
-        <h2>Liste des menus</h2>
-        <div id="menuList" class="plat-liste"></div>
-    </div>
-
-    <!-- Bloc Modification Menu -->
-    <div class="crud-block" id="editMenuForm" style="display: none;">
-        <h2>Modifier le menu</h2>
-        <form id="updateMenuForm">
-            <input type="hidden" id="editMenuId">
-            <div class="form-group">
-                <label>Nom du menu</label>
-                <input type="text" id="editMenuNom" required>
-            </div>
-            <div class="form-group">
-                <label>Prix (€)</label>
-                <input type="number" id="editMenuPrix" step="0.01" required>
-            </div>
-            <div class="form-group">
-                <label>Description</label>
-                <textarea id="editMenuDescription" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Sauvegarder</button>
-            <button type="button" class="btn btn-danger" onclick="hideEditMenuForm()">Annuler</button>
-        </form>
-    </div>
-</div>
-</div>
-
-
-
-
-<!-- ################################# fin block ##################################### -->
-
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
 <script src="/js/dashboard.js"></script>
-
 </body>
 </html>

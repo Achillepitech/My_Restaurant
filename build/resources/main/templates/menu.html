@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestion des Menus du Jour</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+</head>
+<body class="container mt-5">
+<h1 class="mb-4">Gestion des Menus du Jour</h1>
+
+<!-- Configuration -->
+<div class="alert alert-info">
+  Manager ID: <span id="debugManagerId"></span>
+  <br>
+  API URL: <span id="debugApiUrl"></span>
+</div>
+
+<!-- Liste des menus -->
+<div class="card mb-4">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h3 class="mb-0">Liste des Menus du Jour</h3>
+    <button class="btn btn-primary" onclick="showAddForm()">Ajouter un menu</button>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Description</th>
+          <th>Prix</th>
+          <th>Actif</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="menusTableBody">
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Formulaire Menu -->
+<div class="modal fade" id="menuModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitle">Ajouter/Modifier un menu</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="menuForm">
+          <input type="hidden" id="menuId">
+          <div class="mb-3">
+            <label for="nom" class="form-label">Nom du menu</label>
+            <input type="text" class="form-control" id="nom">
+          </div>
+          <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" id="description" rows="3"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="prix" class="form-label">Prix</label>
+            <input type="number" class="form-control" id="prix" step="0.01" required>
+          </div>
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="actif" checked>
+            <label class="form-check-label" for="actif">Menu actif</label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+        <button type="button" class="btn btn-primary" onclick="saveMenu()">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Zone de réponse -->
+<div class="card">
+  <div class="card-header">
+    <h3>Statut</h3>
+  </div>
+  <div class="card-body">
+    <pre id="apiResponse" class="bg-light p-3"></pre>
+  </div>
+</div>
+
+<script>
+  // Configuration
+  const MANAGER_ID = '1';
+  const API_BASE_URL = `http://localhost:8080/managers/${MANAGER_ID}/restaurant/menus`;
+  let menuModal;
+
+  // Afficher les informations de débogage
+  document.getElementById('debugManagerId').textContent = MANAGER_ID;
+  document.getElementById('debugApiUrl').textContent = API_BASE_URL;
+
+  document.addEventListener('DOMContentLoaded', function() {
+    menuModal = new bootstrap.Modal(document.getElementById('menuModal'));
+    loadMenus();
+  });
+
+  function displayResponse(data, isError = false) {
+    const responseElement = document.getElementById('apiResponse');
+    responseElement.style.color = isError ? 'red' : 'black';
+    responseElement.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+    if (!isError) console.log('Réponse:', data);
+  }
+
+  function showAddForm() {
+    document.getElementById('menuId').value = '';
+    document.getElementById('menuForm').reset();
+    document.getElementById('actif').checked = true;
+    document.getElementById('modalTitle').textContent = 'Ajouter un menu';
+    menuModal.show();
+  }
+
+  function showEditForm(menu) {
+    console.log('Menu à éditer:', menu);
+    document.getElementById('menuId').value = menu.id;
+    document.getElementById('nom').value = menu.nom || '';
+    document.getElementById('description').value = menu.description || '';
+    document.getElementById('prix').value = menu.prix || '';
+    document.getElementById('actif').checked = menu.actif;
+    document.getElementById('modalTitle').textContent = 'Modifier un menu';
+    menuModal.show();
+  }
+
+  function getMenuData() {
+    const menuId = document.getElementById('menuId').value;
+    return {
+      id: menuId || null,
+      nom: document.getElementById('nom').value,
+      description: document.getElementById('description').value,
+      prix: parseFloat(document.getElementById('prix').value),
+      actif: document.getElementById('actif').checked,
+      manager: {
+        id: MANAGER_ID
+      }
+    };
+  }
+
+  async function loadMenus() {
+    try {
+      const response = await fetch(API_BASE_URL);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      const menus = await response.json();
+      console.log('Menus chargés:', menus);
+
+      const tbody = document.getElementById('menusTableBody');
+      tbody.innerHTML = '';
+
+      menus.forEach(menu => {
+        const row = tbody.insertRow();
+        row.innerHTML = `
+                        <td>${menu.nom || '-'}</td>
+                        <td>${menu.description || '-'}</td>
+                        <td>${menu.prix ? menu.prix.toFixed(2) + ' €' : '-'}</td>
+                        <td>${menu.actif ? 'Oui' : 'Non'}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning" onclick='showEditForm(${JSON.stringify(menu)})'>
+                                Modifier
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteMenu(${menu.id})">
+                                Supprimer
+                            </button>
+                        </td>
+                    `;
+      });
+
+      displayResponse('Menus chargés avec succès');
+    } catch (error) {
+      displayResponse(`Erreur de chargement: ${error.message}`, true);
+    }
+  }
+
+  async function saveMenu() {
+    try {
+      const menuData = getMenuData();
+      console.log('Données à envoyer:', menuData);
+
+      const menuId = menuData.id;
+      const url = menuId ? `${API_BASE_URL}/${menuId}` : API_BASE_URL;
+      const method = menuId ? 'PUT' : 'POST';
+
+      const response = await fetch(url, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(menuData)
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Erreur HTTP ${response.status}: ${errorText}`);
+      }
+
+      const data = await response.json();
+      console.log('Réponse du serveur:', data);
+      displayResponse(`Menu ${menuId ? 'modifié' : 'ajouté'} avec succès`);
+      menuModal.hide();
+      loadMenus();
+    } catch (error) {
+      displayResponse(`Erreur: ${error.message}`, true);
+    }
+  }
+
+  async function deleteMenu(menuId) {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer ce menu ?')) return;
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/${menuId}`, {
+        method: 'DELETE'
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP ${response.status}`);
+      }
+
+      displayResponse('Menu supprimé avec succès');
+      loadMenus();
+    } catch (error) {
+      displayResponse(`Erreur de suppression: ${error.message}`, true);
+    }
+  }
+</script>
+</body>
+</html>

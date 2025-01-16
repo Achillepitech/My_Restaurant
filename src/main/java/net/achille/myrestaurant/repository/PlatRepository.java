@@ -9,7 +9,5 @@ import java.util.List;
 
 @Repository
 public interface PlatRepository extends JpaRepository<Plat, Long> {
-    List<Plat> findByCategory(String category);
-    List<Plat> findByMenuDuJour(Boolean menuDuJour);
-    List<Plat> findByManager(User manager);
+    List<Plat> findByManager_Id(Long managerId);  // Notez le underscore entre Manager et Id
 }

@@ -9,43 +9,40 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/plats")
+@RequestMapping("/api/managers")  // Nouveau chemin
 @CrossOrigin("*")
 public class PlatController {
 
     @Autowired
     private PlatService platService;
 
-    @GetMapping
-    public List<Plat> getAllPlats() {
-        return platService.getAllPlats();
+    @GetMapping("/{managerId}/restaurant/plats")
+    public List<Plat> getPlatsByManager(@PathVariable Long managerId) {
+        return platService.getPlatsByManagerId(managerId);
     }
 
-    @GetMapping("/category/{category}")
-    public List<Plat> getPlatsByCategory(@PathVariable String category) {
-        return platService.getPlatsByCategory(category);
-    }
-
-    @GetMapping("/menu-du-jour")
-    public List<Plat> getPlatsMenuDuJour() {
-        return platService.getPlatsMenuDuJour();
-    }
-
-    @PostMapping
-    public Plat createPlat(@RequestBody Plat plat) {
+    @PostMapping("/{managerId}/restaurant/plats")
+    public Plat createPlat(@PathVariable Long managerId, @RequestBody Plat plat) {
+        // Associer le manager
+        plat.getManager().setId(managerId);
         return platService.savePlat(plat);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePlat(@PathVariable Long id) {
-        platService.deletePlat(id);
-        return ResponseEntity.ok().build();
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Plat> updatePlat(@PathVariable Long id, @RequestBody Plat plat) {
-        plat.setId(id);
+    @PutMapping("/{managerId}/restaurant/plats/{platId}")
+    public ResponseEntity<Plat> updatePlat(
+            @PathVariable Long managerId,
+            @PathVariable Long platId,
+            @RequestBody Plat plat) {
+        plat.setId(platId);
+        plat.getManager().setId(managerId);
         Plat updatedPlat = platService.savePlat(plat);
         return ResponseEntity.ok(updatedPlat);
     }
+
+    @DeleteMapping("/{managerId}/restaurant/plats/{platId}")
+    public ResponseEntity<?> deletePlat(@PathVariable Long managerId, @PathVariable Long platId) {
+        platService.deletePlat(platId);
+        return ResponseEntity.ok().build();
+    }
+
 }

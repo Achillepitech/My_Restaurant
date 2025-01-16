@@ -18,6 +18,10 @@ public class DessertService {
         return dessertRepository.findAll();
     }
 
+    public List<Dessert> getDessertsByManagerId(Long managerId) {
+        return dessertRepository.findByManagerId(managerId);
+    }
+
     public Dessert saveDessert(Dessert dessert) {
         return dessertRepository.save(dessert);
     }

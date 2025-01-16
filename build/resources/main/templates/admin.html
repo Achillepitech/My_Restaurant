@@ -2,97 +2,210 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard Manager</title>
-  <link rel="stylesheet" href="/css/dashboard.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Information Restaurant</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
 </head>
-<body>
+<body class="container mt-5">
+<h1 class="mb-4">Information du Restaurant</h1>
 
-<nav class="navbar">
-  <ul>
-    <li><a href="#managers" onclick="showSection('managers-section')">Managers</a></li>
-    <li><a href="#info" onclick="showSection('info-section')">Restaurant Info</a></li>
-    <li><a href="#entrees" onclick="showSection('entrees-section')">Entrées</a></li>
-    <li><a href="#plats" onclick="showSection('plats-section')">Plats</a></li>
-    <li><a href="#desserts" onclick="showSection('desserts-section')">Desserts</a></li>
-    <li><a href="http://localhost:8080/" style="background-color: #4CAF50; border-radius: 4px;">Voir le site</a></li>
-  </ul>
-</nav>
+<!-- Informations de débogage -->
+<div class="alert alert-info">
+  Manager ID: <span id="debugManagerId"></span>
+  <br>
+  API URL: <span id="debugApiUrl"></span>
+</div>
 
-<!-- Section Managers -->
-<div id="managers-section" class="section">
-  <div class="container">
-    <h2>Gestion des Managers</h2>
-    <!-- Contenu à venir -->
+<!-- Formulaire Restaurant -->
+<div class="card mb-4">
+  <div class="card-header">
+    <h3>Informations du Restaurant</h3>
+  </div>
+  <div class="card-body">
+    <form id="restaurantForm">
+      <input type="hidden" id="restaurantId">
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="nom" class="form-label">Nom du Restaurant</label>
+          <input type="text" class="form-control" id="nom" required>
+        </div>
+        <div class="col-md-6">
+          <label for="ville" class="form-label">Ville</label>
+          <input type="text" class="form-control" id="ville">
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="adresse" class="form-label">Adresse</label>
+        <input type="text" class="form-control" id="adresse">
+      </div>
+
+      <div class="mb-3">
+        <label for="telephone" class="form-label">Téléphone</label>
+        <input type="tel" class="form-control" id="telephone">
+      </div>
+
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea class="form-control" id="description" rows="3"></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label for="presentationText" class="form-label">Texte de Présentation</label>
+        <textarea class="form-control" id="presentationText" rows="3"></textarea>
+      </div>
+
+      <!-- Informations Manager -->
+      <div class="card mt-4 mb-3">
+        <div class="card-header">
+          <h4>Informations Manager</h4>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <label class="form-label">Username</label>
+              <input type="text" class="form-control" id="managerUsername" readonly>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" id="managerEmail" readonly>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-group" role="group">
+        <button type="button" class="btn btn-primary" onclick="loadRestaurantInfo()">Recharger</button>
+        <button type="button" class="btn btn-warning" onclick="updateRestaurant()">Mettre à jour</button>
+      </div>
+    </form>
   </div>
 </div>
 
-<!-- Section Restaurant Info -->
-<div id="info-section" class="section">
-  <div class="container">
-    <h2>Informations du Restaurant</h2>
-    <!-- Contenu à venir -->
+<!-- Zone de réponse -->
+<div class="card">
+  <div class="card-header">
+    <h3>Statut</h3>
+  </div>
+  <div class="card-body">
+    <pre id="apiResponse" class="bg-light p-3"></pre>
   </div>
 </div>
 
+<script>
+  // Configuration
+  const MANAGER_ID = '1';
+  const API_BASE_URL = 'http://localhost:8080/managers/' + MANAGER_ID + '/restaurant';
 
+  // Afficher les informations de débogage
+  document.getElementById('debugManagerId').textContent = MANAGER_ID;
+  document.getElementById('debugApiUrl').textContent = API_BASE_URL;
 
-<!-- Section Entrées -->
-<div id="entrees-section" class="section">
-  <div class="container">
-    <h2>Gestion des entrées</h2>
+  function displayResponse(data, isError = false) {
+    const responseElement = document.getElementById('apiResponse');
+    if (isError) {
+      responseElement.style.color = 'red';
+    } else {
+      responseElement.style.color = 'black';
+    }
+    responseElement.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+  }
 
-    <!-- Bloc Ajout Entrée -->
-    <div class="crud-block">
-      <h2>Ajouter une entrée</h2>
-      <form id="addEntreeForm">
-        <div class="form-group">
-          <label>Nom de l'entrée</label>
-          <input type="text" id="nomEntree" required>
-        </div>
-        <div class="form-group">
-          <label>Prix (€)</label>
-          <input type="number" id="prixEntree" step="0.01" required>
-        </div>
-        <div class="form-group">
-          <label>Description</label>
-          <textarea id="descriptionEntree" required></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Ajouter</button>
-      </form>
-    </div>
+  function getRestaurantData() {
+    const data = {
+      id: document.getElementById('restaurantId').value,
+      nom: document.getElementById('nom').value,
+      description: document.getElementById('description').value,
+      adresse: document.getElementById('adresse').value,
+      telephone: document.getElementById('telephone').value,
+      ville: document.getElementById('ville').value,
+      presentationText: document.getElementById('presentationText').value,
+      heuresOuverture: {},
+      manager: {
+        id: MANAGER_ID,
+        username: document.getElementById('managerUsername').value,
+        email: document.getElementById('managerEmail').value
+      }
+    };
+    console.log('Données à envoyer:', data);
+    return data;
+  }
 
-    <!-- Bloc Liste Entrées -->
-    <div class="crud-block">
-      <h2>Liste des entrées</h2>
-      <div id="entreeList" class="plat-liste"></div>
-    </div>
+  async function loadRestaurantInfo() {
+    try {
+      displayResponse('Chargement des données...');
+      const response = await fetch(API_BASE_URL);
 
-    <!-- Bloc Modification Entrée -->
-    <div class="crud-block" id="editEntreeForm" style="display: none;">
-      <h2>Modifier l'entrée</h2>
-      <form id="updateEntreeForm">
-        <input type="hidden" id="editEntreeId">
-        <div class="form-group">
-          <label>Nom de l'entrée</label>
-          <input type="text" id="editEntreeNom" required>
-        </div>
-        <div class="form-group">
-          <label>Prix (€)</label>
-          <input type="number" id="editEntreePrix" step="0.01" required>
-        </div>
-        <div class="form-group">
-          <label>Description</label>
-          <textarea id="editEntreeDescription" required></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Sauvegarder</button>
-        <button type="button" class="btn btn-danger" onclick="hideEditEntreeForm()">Annuler</button>
-      </form>
-    </div>
-  </div>
-</div>
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
+      const data = await response.json();
+      console.log('Données reçues:', data);
 
-<script src="/js/admin.js"></script>
+      // Remplir le formulaire avec les données reçues
+      document.getElementById('restaurantId').value = data.id || '';
+      document.getElementById('nom').value = data.nom || '';
+      document.getElementById('adresse').value = data.adresse || '';
+      document.getElementById('telephone').value = data.telephone || '';
+      document.getElementById('ville').value = data.ville || '';
+      document.getElementById('description').value = data.description || '';
+      document.getElementById('presentationText').value = data.presentationText || '';
 
+      // Informations manager
+      if (data.manager) {
+        document.getElementById('managerUsername').value = data.manager.username || '';
+        document.getElementById('managerEmail').value = data.manager.email || '';
+      }
+
+      displayResponse({
+        message: 'Données chargées avec succès',
+        data: data
+      });
+    } catch (error) {
+      console.error('Erreur de chargement:', error);
+      displayResponse(`Erreur de chargement: ${error.message}`, true);
+    }
+  }
+
+  async function updateRestaurant() {
+    try {
+      displayResponse('Mise à jour en cours...');
+      const requestData = getRestaurantData();
+
+      const response = await fetch(API_BASE_URL, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(requestData)
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Erreur HTTP ${response.status}: ${errorText}`);
+      }
+
+      const data = await response.json();
+
+      displayResponse({
+        message: 'Restaurant mis à jour avec succès',
+        data: data
+      });
+
+      // Recharger les données après la mise à jour
+      await loadRestaurantInfo();
+    } catch (error) {
+      console.error('Erreur de mise à jour:', error);
+      displayResponse(`Erreur de mise à jour: ${error.message}`, true);
+    }
+  }
+
+  // Charger les données au démarrage
+  document.addEventListener('DOMContentLoaded', loadRestaurantInfo);
+</script>
 </body>
 </html>
