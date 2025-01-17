@@ -47,4 +47,9 @@ public class HomeController {
         return "menu";
     }
 
+    @GetMapping ("/signup")
+    public String signup() {
+        return "signup";
+    }
+
 }

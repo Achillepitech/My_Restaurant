@@ -1,271 +1,142 @@
-// URL de base de l'API pour les entrées
-const MANAGER_ID = '1';
+// Attendre que le DOM soit chargé
+document.addEventListener('DOMContentLoaded', () => {
+    // Récupération des éléments du DOM
+    const signupForm = document.getElementById('signupForm');
+    const restaurantForm = document.getElementById('restaurantForm');
+    const restaurantModal = new bootstrap.Modal(document.getElementById('restaurantModal'));
+    let managerId = null; // Variable pour stocker l'ID du manager créé
 
+    // Gestionnaire d'événement pour le formulaire d'inscription du manager
+    signupForm.addEventListener('submit', async (e) => {
+        e.preventDefault(); // Empêcher le comportement par défaut du formulaire
 
-const API_ENTREES_URL = 'http://localhost:8080/managers/'+MANAGER_ID+'/restaurant/entrees';
+        // Récupération des valeurs des champs de mot de passe
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
 
-// Charger les entrées au démarrage
-document.addEventListener('DOMContentLoaded', loadEntrees);
-
-// Fonction pour charger toutes les entrées
-async function loadEntrees() {
-    try {
-        const response = await fetch(API_ENTREES_URL);
-        const entrees = await response.json();
-        displayEntrees(entrees);
-    } catch (error) {
-        console.error('Erreur:', error);
-        alert('Erreur lors du chargement des entrées');
-    }
-}
-
-// Afficher les entrées dans la liste
-function displayEntrees(entrees) {
-    const entreeList = document.getElementById('entreeList');
-    entreeList.innerHTML = '';
-
-    entrees.forEach(entree => {
-        const entreeDiv = document.createElement('div');
-        entreeDiv.className = 'plat-item';
-        entreeDiv.innerHTML = `
-            <h3>${entree.nom}</h3>
-            <p>${entree.description}</p>
-            <p><strong>${entree.prix} €</strong></p>
-            <div class="plat-actions">
-                <button class="btn btn-warning" onclick="showEditForm(${entree.id}, '${entree.nom}', ${entree.prix}, '${entree.description}')">
-                    Modifier
-                </button>
-                <button class="btn btn-danger" onclick="deleteEntree(${entree.id})">
-                    Supprimer
-                </button>
-            </div>
-        `;
-        entreeList.appendChild(entreeDiv);
-    });
-}
-
-// Ajouter une entrée
-document.getElementById('addEntreeForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const entreeData = {
-        nom: document.getElementById('nomEntree').value.trim(),
-        prix: parseFloat(document.getElementById('prixEntree').value),
-        description: document.getElementById('descriptionEntree').value.trim()
-    };
-
-    try {
-        const response = await fetch(API_ENTREES_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(entreeData)
-        });
-
-        if (response.ok) {
-            alert('Entrée ajoutée avec succès!');
-            document.getElementById('addEntreeForm').reset();
-            loadEntrees();
+        // Vérification de la correspondance des mots de passe
+        if (password !== confirmPassword) {
+            alert('Les mots de passe ne correspondent pas');
+            return;
         }
-    } catch (error) {
-        console.error('Erreur:', error);
-        alert('Erreur lors de l\'ajout de l\'entrée');
-    }
-});
 
-// Afficher le formulaire de modification
-function showEditForm(id, nom, prix, description) {
-    const form = document.getElementById('editEntreeForm');
-    form.style.display = 'block';
-    document.getElementById('editEntreeId').value = id;
-    document.getElementById('editEntreeNom').value = nom;
-    document.getElementById('editEntreePrix').value = prix;
-    document.getElementById('editEntreeDescription').value = description;
-    form.scrollIntoView({ behavior: 'smooth' });
-}
+        // Création de l'objet avec les données du manager
+        const managerData = {
+            username: document.getElementById('username').value,
+            email: document.getElementById('email').value,
+            password: password
+        };
 
-// Cacher le formulaire de modification
-function hideEditEntreeForm() {
-    document.getElementById('editEntreeForm').style.display = 'none';
-}
-
-// Mettre à jour une entrée
-document.getElementById('updateEntreeForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const id = document.getElementById('editEntreeId').value;
-    const entreeData = {
-        id: id,
-        nom: document.getElementById('editEntreeNom').value.trim(),
-        prix: parseFloat(document.getElementById('editEntreePrix').value),
-        description: document.getElementById('editEntreeDescription').value.trim()
-    };
-
-    try {
-        const response = await fetch(`${API_ENTREES_URL}/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(entreeData)
-        });
-
-        if (response.ok) {
-            alert('Entrée modifiée avec succès!');
-            hideEditEntreeForm();
-            loadEntrees();
-        }
-    } catch (error) {
-        console.error('Erreur:', error);
-        alert('Erreur lors de la modification de l\'entrée');
-    }
-});
-
-// Supprimer une entrée
-async function deleteEntree(id) {
-    if (confirm('Voulez-vous vraiment supprimer cette entrée?')) {
         try {
-            const response = await fetch(`${API_ENTREES_URL}/${id}`, {
-                method: 'DELETE'
+            // Envoi de la requête POST pour créer le manager
+            const response = await fetch('/managers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(managerData)
             });
 
-            if (response.ok) {
-                alert('Entrée supprimée avec succès!');
-                loadEntrees();
+            // Vérification de la réponse
+            if (!response.ok) {
+                const errorData = await response.text();
+                throw new Error(`Erreur lors de la création du compte: ${errorData}`);
             }
+
+            // Récupération et stockage de l'ID du manager créé
+            const manager = await response.json();
+            managerId = manager.id;
+
+            // Affichage du modal pour la création du restaurant
+            restaurantModal.show();
+
         } catch (error) {
             console.error('Erreur:', error);
-            alert('Erreur lors de la suppression de l\'entrée');
+            alert(error.message);
         }
-    }
-}
-
-// URL de l'API pour les desserts
- // À remplacer par l'ID du manager connecté
-const API_DESSERTS_URL = `http://localhost:8080/managers/${MANAGER_ID}/restaurant/desserts`;
-
-// Charger les desserts au démarrage
-document.addEventListener('DOMContentLoaded', loadDesserts);
-
-// Fonction pour charger tous les desserts
-async function loadDesserts() {
-    try {
-        const response = await fetch(API_DESSERTS_URL);
-        const desserts = await response.json();
-        displayDesserts(desserts);
-    } catch (error) {
-        console.error('Erreur:', error);
-        alert('Erreur lors du chargement des desserts');
-    }
-}
-
-// Afficher les desserts dans la liste
-function displayDesserts(desserts) {
-    const dessertList = document.getElementById('dessertList');
-    dessertList.innerHTML = '';
-
-    desserts.forEach(dessert => {
-        const dessertDiv = document.createElement('div');
-        dessertDiv.className = 'plat-item';
-        dessertDiv.innerHTML = `
-            <h3>${dessert.nom}</h3>
-            <p>${dessert.description}</p>
-            <p><strong>${dessert.prix} €</strong></p>
-            <div class="plat-actions">
-                <button class="btn btn-warning" 
-                    onclick="showEditDessertForm(${dessert.id}, '${dessert.nom}', ${dessert.prix}, '${dessert.description}')">
-                    Modifier
-                </button>
-                <button class="btn btn-danger" onclick="deleteDessert(${dessert.id})">
-                    Supprimer
-                </button>
-            </div>
-        `;
-        dessertList.appendChild(dessertDiv);
     });
-}
 
-// Ajouter un dessert
-document.getElementById('addDessertForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const dessertData = {
-        nom: document.getElementById('nomDessert').value.trim(),
-        prix: parseFloat(document.getElementById('prixDessert').value),
-        description: document.getElementById('descriptionDessert').value.trim()
-    };
+    // Gestionnaire d'événement pour le formulaire de création du restaurant
+    restaurantForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-    try {
-        const response = await fetch(API_DESSERTS_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(dessertData)
-        });
-
-        if (response.ok) {
-            alert('Dessert ajouté avec succès!');
-            document.getElementById('addDessertForm').reset();
-            loadDesserts();
+        // Vérification de l'existence de l'ID du manager
+        if (!managerId) {
+            alert('Erreur: Aucun manager trouvé');
+            return;
         }
-    } catch (error) {
-        console.error('Erreur:', error);
-        alert('Erreur lors de l\'ajout du dessert');
-    }
-});
 
-// Afficher le formulaire de modification
-function showEditDessertForm(id, nom, prix, description) {
-    document.getElementById('editDessertForm').style.display = 'block';
-    document.getElementById('editDessertId').value = id;
-    document.getElementById('editDessertNom').value = nom;
-    document.getElementById('editDessertPrix').value = prix;
-    document.getElementById('editDessertDescription').value = description;
-    document.getElementById('editDessertForm').scrollIntoView({ behavior: 'smooth' });
-}
+        // Création de l'objet avec les données du restaurant
+        const restaurantData = {
+            nom: document.getElementById('nomRestaurant').value,
+            description: document.getElementById('description').value,
+            adresse: document.getElementById('adresse').value,
+            telephone: document.getElementById('telephone').value,
+            ville: document.getElementById('ville').value,
+            presentationText: document.getElementById('presentation').value,
+            heuresOuverture: {
+                "lundi": "12:00-14:30, 19:00-22:30",
+                "mardi": "12:00-14:30, 19:00-22:30",
+                "mercredi": "12:00-14:30, 19:00-22:30",
+                "jeudi": "12:00-14:30, 19:00-22:30",
+                "vendredi": "12:00-14:30, 19:00-22:30",
+                "samedi": "12:00-14:30, 19:00-23:00",
+                "dimanche": "Fermé"
+            },
+            // Inclusion des informations du manager
+            manager: {
+                id: managerId,
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value
+            }
+        };
 
-// Cacher le formulaire de modification
-function hideEditDessertForm() {
-    document.getElementById('editDessertForm').style.display = 'none';
-}
-
-// Mettre à jour un dessert
-document.getElementById('updateDessertForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const id = document.getElementById('editDessertId').value;
-    const dessertData = {
-        id: id,
-        nom: document.getElementById('editDessertNom').value.trim(),
-        prix: parseFloat(document.getElementById('editDessertPrix').value),
-        description: document.getElementById('editDessertDescription').value.trim()
-    };
-
-    try {
-        const response = await fetch(`${API_DESSERTS_URL}/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(dessertData)
-        });
-
-        if (response.ok) {
-            alert('Dessert modifié avec succès!');
-            hideEditDessertForm();
-            loadDesserts();
-        }
-    } catch (error) {
-        console.error('Erreur:', error);
-        alert('Erreur lors de la modification du dessert');
-    }
-});
-
-// Supprimer un dessert
-async function deleteDessert(id) {
-    if (confirm('Voulez-vous vraiment supprimer ce dessert?')) {
         try {
-            const response = await fetch(`${API_DESSERTS_URL}/${id}`, {
-                method: 'DELETE'
+            // Envoi de la requête POST pour créer le restaurant
+            const response = await fetch(`/managers/${managerId}/restaurant`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(restaurantData)
             });
 
-            if (response.ok) {
-                alert('Dessert supprimé avec succès!');
-                loadDesserts();
+            // Vérification de la réponse
+            if (!response.ok) {
+                const errorData = await response.text();
+                throw new Error(`Erreur lors de la création du restaurant: ${errorData}`);
             }
+
+            // Notification du succès et redirection
+            alert('Restaurant créé avec succès');
+            window.location.href = '/dashboard';
+
         } catch (error) {
             console.error('Erreur:', error);
-            alert('Erreur lors de la suppression du dessert');
+            alert(error.message);
         }
-    }
-}
+    });
+
+    // Ajout des validations supplémentaires si nécessaire
+    const validatePhoneNumber = (phone) => {
+        const phoneRegex = /^[0-9]{10}$/;
+        return phoneRegex.test(phone);
+    };
+
+    document.getElementById('telephone').addEventListener('input', (e) => {
+        const phone = e.target.value.replace(/\D/g, ''); // Supprimer tous les caractères non numériques
+        if (phone.length > 10) {
+            e.target.value = phone.slice(0, 10); // Limiter à 10 chiffres
+        } else {
+            e.target.value = phone;
+        }
+    });
+
+    // Validation de l'email
+    document.getElementById('email').addEventListener('input', (e) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const isValid = emailRegex.test(e.target.value);
+        e.target.classList.toggle('is-invalid', !isValid);
+    });
+});

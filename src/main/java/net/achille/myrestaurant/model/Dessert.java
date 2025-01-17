@@ -1,9 +1,11 @@
 package net.achille.myrestaurant.model;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.List;
 
 @Entity
 @Data
@@ -21,4 +23,8 @@ public class Dessert {
     @ManyToOne
     @JoinColumn(name = "manager_id", referencedColumnName = "id")
     private User manager;
+
+    @ManyToMany(mappedBy = "desserts")
+    @JsonIgnoreProperties("desserts")
+    private List<MenuDuJourNew> menus;
 }

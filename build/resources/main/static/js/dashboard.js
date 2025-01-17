@@ -642,6 +642,37 @@ async function deleteMenu(menuId) {
 }
 
 
+// Gestion de la navigation
+function showSection(sectionId) {
+    // Cache toutes les sections
+    document.querySelectorAll('.content-section').forEach(section => {
+        section.classList.remove('active');
+    });
 
-// Charger les données au démarrage
-document.addEventListener('DOMContentLoaded', loadRestaurantInfo);
+    // Affiche la section demandée
+    const section = document.getElementById(sectionId);
+    if (section) {
+        section.classList.add('active');
+    }
+
+    // Met à jour les classes active dans la navigation
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + sectionId) {
+            link.classList.add('active');
+        }
+    });
+}
+
+// Initialisation et gestion des événements
+document.addEventListener('DOMContentLoaded', function() {
+    // Gestion du routage initial
+    const hash = window.location.hash.slice(1) || 'admin';
+    showSection(hash);
+
+    // Écoute les changements de hash
+    window.addEventListener('hashchange', function() {
+        const hash = window.location.hash.slice(1) || 'admin';
+        showSection(hash);
+    });
+});

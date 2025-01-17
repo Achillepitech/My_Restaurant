@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription Restaurateur</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/signup.css}">
+</head>
+<body class="bg-light">
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="text-center mb-4">Inscription Restaurateur</h2>
+
+                    <!-- Étape 1 : Création du compte -->
+                    <div id="step1" class="signup-step">
+                        <!-- Contenu du formulaire manager -->
+                        <form id="managerForm" class="needs-validation" novalidate>
+                            <!-- Les champs du formulaire restent identiques -->
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Nom d'utilisateur</label>
+                                <input type="text" class="form-control" id="username" required>
+                                <div class="invalid-feedback">
+                                    Veuillez entrer un nom d'utilisateur.
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" required>
+                                <div class="invalid-feedback">
+                                    Veuillez entrer une adresse email valide.
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Mot de passe</label>
+                                <input type="password" class="form-control" id="password" required
+                                       minlength="8"
+                                       pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$">
+                                <div class="invalid-feedback">
+                                    Le mot de passe doit contenir au moins 8 caractères, incluant des lettres et des chiffres.
+                                </div>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Créer mon compte</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Étape 2 : Création du restaurant -->
+                    <div id="step2" class="signup-step d-none">
+                        <form id="restaurantForm" class="needs-validation" novalidate>
+                            <!-- Le contenu reste le même -->
+                            <input type="hidden" id="managerId">
+
+                            <div class="mb-3">
+                                <label for="nom" class="form-label">Nom du restaurant</label>
+                                <input type="text" class="form-control" id="nom" required>
+                                <div class="invalid-feedback">
+                                    Veuillez entrer le nom du restaurant.
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="adresse" class="form-label">Adresse</label>
+                                <input type="text" class="form-control" id="adresse" required>
+                                <div class="invalid-feedback">
+                                    Veuillez entrer l'adresse du restaurant.
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="ville" class="form-label">Ville</label>
+                                <input type="text" class="form-control" id="ville" required>
+                                <div class="invalid-feedback">
+                                    Veuillez entrer la ville.
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="telephone" class="form-label">Téléphone</label>
+                                <input type="tel" class="form-control" id="telephone" required>
+                                <div class="invalid-feedback">
+                                    Veuillez entrer un numéro de téléphone valide.
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control" id="description" rows="3" required></textarea>
+                                <div class="invalid-feedback">
+                                    Veuillez entrer une description.
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">Créer mon restaurant</button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="retourEtape1()">Retour</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Toast pour les notifications -->
+                    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                        <div id="notification" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                            <div class="toast-header">
+                                <strong class="me-auto">Notification</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                            </div>
+                            <div class="toast-body" id="notificationMessage"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/signup.js}"></script>
+</body>
+</html>
