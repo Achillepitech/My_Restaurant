@@ -1,10 +1,10 @@
+const MANAGER_ID = '1';
+const API_BASE_URL = 'http://localhost:8080/managers/' + MANAGER_ID + '/restaurant';
 
-
-
-
+// Fonction pour récupérer et afficher les informations du restaurant
 async function fetchRestaurantInfo() {
     try {
-        const response = await fetch('http://localhost:8080/api/restaurant/info');
+        const response = await fetch(API_BASE_URL);
         const restaurant = await response.json();
 
         // Mise à jour des informations principales
@@ -24,44 +24,155 @@ async function fetchRestaurantInfo() {
     }
 }
 
-function updateElement(id, content) {
-    const element = document.getElementById(id);
-    if (element) {
-        element.textContent = content;
-    } else {
-        console.warn(`Élément avec l'ID ${id} non trouvé`);
-    }
-}
-
+// Fonction pour mettre à jour les heures d'ouverture
 function updateHeuresOuverture(heures) {
     const heuresListe = document.getElementById('restaurant-heures');
-    if (!heuresListe) {
-        console.warn('Liste des heures non trouvée');
-        return;
-    }
+    if (!heuresListe || !heures) return;
 
-    const horairesList = Object.entries(heures).map(([jour, horaire]) => {
-        return `<li>
-            <span class="jour">${jour}</span>
-            <span class="horaire">${horaire}</span>
-        </li>`;
+    let horaireHTML = '';
+    const joursSemaine = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+
+    joursSemaine.forEach(jour => {
+        const horaire = heures[jour.toLowerCase()] || 'Fermé';
+        horaireHTML += `
+            <li>
+                <span class="jour">${jour}</span>
+                <span class="horaire">${horaire}</span>
+            </li>`;
     });
 
-    heuresListe.innerHTML = horairesList.join('');
+    heuresListe.innerHTML = horaireHTML;
 }
 
+// Fonction pour récupérer et afficher les menus
+async function getMenus() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/menus`);
+        const menus = await response.json();
 
-// Appeler la fonction au chargement de la page
-document.addEventListener('DOMContentLoaded', fetchRestaurantInfo);
+        const menuDiv = document.getElementById('menu');
+        menuDiv.innerHTML = '';
 
+        menus.forEach(menu => {
+            if (menu.actif) { // N'afficher que les menus actifs
+                const menuHTML = `
+                    <div class="menu-card">
+                        <div class="menu-content">
+                            <h3 class="menu-title">${menu.nom}</h3>
+                            <div class="menu-description">
+                                <p>${menu.description || 'Description non disponible'}</p>
+                            </div>
+                            <div class="menu-price-container">
+                                <span class="menu-price">${menu.prix.toFixed(2)} €</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                menuDiv.innerHTML += menuHTML;
+            }
+        });
 
+        if (menuDiv.innerHTML === '') {
+            menuDiv.innerHTML = '<p>Aucun menu actif disponible</p>';
+        }
+    } catch (error) {
+        console.error('Erreur lors du chargement des menus:', error);
+        const menuDiv = document.getElementById('menu');
+        menuDiv.innerHTML = '<p>Erreur lors du chargement des menus</p>';
+    }
+}
 
+// Fonction pour récupérer et afficher les entrées
+async function getEntrees() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/entrees`);
+        const entrees = await response.json();
 
+        const entreesDiv = document.getElementById('entrees');
+        entreesDiv.innerHTML = '';
 
+        entrees.forEach(entree => {
+            const entreeHTML = `
+                <div class="plat-card">
+                    <h3>${entree.nom}</h3>
+                    <p class="description">${entree.description || ''}</p>
+                    <div class="prix">${entree.prix.toFixed(2)} €</div>
+                </div>
+            `;
+            entreesDiv.innerHTML += entreeHTML;
+        });
+    } catch (error) {
+        console.error('Erreur lors du chargement des entrées:', error);
+        const entreesDiv = document.getElementById('entrees');
+        entreesDiv.innerHTML = '<p>Erreur lors du chargement des entrées</p>';
+    }
+}
 
-// Fonction pour afficher un message d'erreur
+// Fonction pour récupérer et afficher les plats
+async function getPlats() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/plats`);
+        const plats = await response.json();
+
+        const platsDiv = document.getElementById('plats');
+        platsDiv.innerHTML = '';
+
+        plats.forEach(plat => {
+            if (plat.actif) { // N'afficher que les plats actifs
+                const platHTML = `
+                    <div class="plat-card">
+                        <h3>${plat.nom}</h3>
+                        <p class="description">${plat.description || 'Description non disponible'}</p>
+                        <div class="prix">${plat.prix.toFixed(2)} €</div>
+                    </div>
+                `;
+                platsDiv.innerHTML += platHTML;
+            }
+        });
+    } catch (error) {
+        console.error('Erreur lors du chargement des plats:', error);
+        const platsDiv = document.getElementById('plats');
+        platsDiv.innerHTML = '<p>Erreur lors du chargement des plats</p>';
+    }
+}
+
+// Fonction pour récupérer et afficher les desserts
+async function getDesserts() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/desserts`);
+        const desserts = await response.json();
+
+        const dessertsDiv = document.getElementById('desserts');
+        dessertsDiv.innerHTML = '';
+
+        desserts.forEach(dessert => {
+            const dessertHTML = `
+                <div class="plat-card">
+                    <h3>${dessert.nom}</h3>
+                    <p class="description">${dessert.description || 'Description non disponible'}</p>
+                    <div class="prix">${dessert.prix.toFixed(2)} €</div>
+                </div>
+            `;
+            dessertsDiv.innerHTML += dessertHTML;
+        });
+    } catch (error) {
+        console.error('Erreur lors du chargement des desserts:', error);
+        const dessertsDiv = document.getElementById('desserts');
+        dessertsDiv.innerHTML = '<p>Erreur lors du chargement des desserts</p>';
+    }
+}
+
+// Fonction utilitaire pour mettre à jour les éléments HTML
+function updateElement(id, content) {
+    const element = document.getElementById(id);
+    if (element && content) {
+        element.textContent = content;
+    }
+}
+
+// Fonction pour afficher les messages d'erreur
 function displayErrorMessage() {
-    const container = document.querySelector('.restaurant-container');
+    const container = document.querySelector('.info-section');
     if (container) {
         const errorMessage = document.createElement('div');
         errorMessage.className = 'error-message';
@@ -70,158 +181,11 @@ function displayErrorMessage() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', fetchRestaurantInfo);
-
-async function getPlats() {
-    try {
-        const response = await fetch('http://localhost:8080/api/plats');
-        const plats = await response.json();
-        console.log("Plats reçus:", plats);
-
-        const platsDiv = document.getElementById('plats');
-        platsDiv.innerHTML = '';
-
-        plats.forEach(plat => {
-            const platHTML = `
-                <div class="plat-card">
-                    ${plat.image ? `<div class="plat-image">
-                        <img src="${plat.image}" alt="${plat.nom}" 
-                             onerror="this.style.display='none'">
-                    </div>` : ''}
-                    <h3>${plat.nom}</h3>
-                    <p class="description">${plat.description || 'Description non disponible'}</p>
-                    <div class="prix">${plat.prix.toFixed(2)} €</div>
-                </div>
-            `;
-
-            platsDiv.innerHTML += platHTML;
-        });
-    } catch (error) {
-        console.error('Erreur lors du chargement des plats:', error);
-        const platsDiv = document.getElementById('plats');
-        platsDiv.innerHTML = `
-            <div class="error-message">
-                <p>Erreur lors du chargement des plats</p>
-            </div>
-        `;
-    }
-}
-
-    async function getEntrees() {
-    try {
-    const response = await fetch('http://localhost:8080/api/entrees');
-    const entrees = await response.json();
-    console.log("Entrées reçues:", entrees);
-
-    const entreesDiv = document.getElementById('entrees');
-    entreesDiv.innerHTML = '';
-
-    entrees.forEach(entree => {
-    const platHTML = `
-      <div class="plat-card">
-        <h3>${entree.nom}</h3>
-        <p class="description">${entree.description || ''}</p>
-        <div class="prix">${entree.prix} €</div>
-      </div>
-    `;
-
-    entreesDiv.innerHTML += platHTML;
-});
-} catch (error) {
-    console.error('Erreur lors du chargement des entrées:', error);
-    const entreesDiv = document.getElementById('entrees');
-    entreesDiv.innerHTML = '<p>Erreur lors du chargement des entrées</p>';
-}
-}
-
-
-async function getDesserts() {
-    try {
-        const response = await fetch('http://localhost:8080/api/desserts');
-        const desserts = await response.json();
-        console.log("Desserts reçus:", desserts);
-
-        const dessertsDiv = document.getElementById('desserts');
-        dessertsDiv.innerHTML = '';
-
-        desserts.forEach(dessert => {
-            const dessertHTML = `
-                <div class="plat-card">
-                    ${dessert.image ? `<div class="images/rest.png">
-">
-                        <img src="${dessert.image}" alt="${dessert.nom}" 
-                             onerror="this.style.display='none'">
-                    </div>` : ''}
-                    <h3>${dessert.nom}</h3>
-                    <p class="description">${dessert.description || 'Description non disponible'}</p>
-                    <div class="prix">${dessert.prix.toFixed(2)} €</div>
-                </div>
-            `;
-
-            dessertsDiv.innerHTML += dessertHTML;
-        });
-    } catch (error) {
-        console.error('Erreur lors du chargement des desserts:', error);
-        const dessertsDiv = document.getElementById('desserts');
-        dessertsDiv.innerHTML = `
-            <div class="error-message">
-                <p>Erreur lors du chargement des desserts</p>
-            </div>
-        `;
-    }
-}
-
-async function getMenus() {
-    try {
-        const response = await fetch('http://localhost:8080/api/menu');
-        const menus = await response.json();
-        console.log("Menus reçus:", menus);
-
-        const menuDiv = document.getElementById('menu');
-        menuDiv.innerHTML = '';
-
-        menus.forEach(menu => {
-            const menuHTML = `
-                <div class="menu-card">
-                    ${menu.image ? `
-                        <div class="menu-header">
-                            <img src="${menu.image}" 
-                                 alt="${menu.nom}"
-                                 onerror="this.src='/images/default-menu.jpg'">
-                        </div>
-                    ` : ''}
-                    <div class="menu-content">
-                        <h3 class="menu-title">${menu.nom}</h3>
-                        <div class="menu-description">
-                            ${menu.description.split('\n').map(line => `<p>${line}</p>`).join('')}
-                        </div>
-                        <div class="menu-price-container">
-                            <span class="menu-price">${menu.prix.toFixed(2)} €</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            menuDiv.innerHTML += menuHTML;
-        });
-    } catch (error) {
-        console.error('Erreur lors du chargement des menus:', error);
-        const menuDiv = document.getElementById('menu');
-        menuDiv.innerHTML = `
-            <div class="error-message">
-                <p>Erreur lors du chargement des menus</p>
-            </div>
-        `;
-    }
-}
-
-// Assurez-vous d'ajouter getMenus() à vos appels au chargement de la page
+// Initialisation au chargement de la page
 document.addEventListener('DOMContentLoaded', () => {
     fetchRestaurantInfo();
     getEntrees();
     getPlats();
-    getMenus();
     getDesserts();
 });
-
 

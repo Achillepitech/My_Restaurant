@@ -88,7 +88,6 @@ public class ManagerController {
 
     // ========== Gestion Restaurant ==========
 
-    // Créer un restaurant pour un manager
     @PostMapping("/{managerId}/restaurant")
     public ResponseEntity<RestaurantInfo> createRestaurantForManager(
             @PathVariable Long managerId,
@@ -104,7 +103,6 @@ public class ManagerController {
         return ResponseEntity.ok(savedRestaurant);
     }
 
-    // Obtenir le restaurant d'un manager
     @GetMapping("/{managerId}/restaurant")
     public ResponseEntity<RestaurantInfo> getManagerRestaurant(@PathVariable Long managerId) {
         Optional<User> manager = managerService.getManagerById(managerId);
@@ -115,7 +113,6 @@ public class ManagerController {
         return ResponseEntity.ok(restaurant);
     }
 
-    // Mettre à jour le restaurant d'un manager
     @PutMapping("/{managerId}/restaurant")
     public ResponseEntity<RestaurantInfo> updateManagerRestaurant(
             @PathVariable Long managerId,
@@ -131,7 +128,6 @@ public class ManagerController {
         return ResponseEntity.ok(updatedRestaurant);
     }
 
-    // Supprimer le restaurant d'un manager
     @DeleteMapping("/{managerId}/restaurant")
     public ResponseEntity<Void> deleteManagerRestaurant(@PathVariable Long managerId) {
         Optional<User> manager = managerService.getManagerById(managerId);
@@ -159,7 +155,7 @@ public class ManagerController {
             return ResponseEntity.notFound().build();
         }
 
-        entree.setManager(manager.get());  // Ajoutez cette ligne
+        entree.setManager(manager.get());
         Entree savedEntree = entreeService.saveEntree(entree);
         return ResponseEntity.ok(savedEntree);
     }
@@ -174,7 +170,36 @@ public class ManagerController {
     }
 
 
+    @PutMapping("/{managerId}/restaurant/entrees/{entreeId}")
+    public ResponseEntity<Entree> updateEntree(
+            @PathVariable Long managerId,
+            @PathVariable Long entreeId,
+            @RequestBody Entree entree
+    ) {
+        Optional<User> manager = managerService.getManagerById(managerId);
+        if (manager.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
 
+        entree.setId(entreeId);
+        entree.setManager(manager.get());
+        Entree updatedEntree = entreeService.saveEntree(entree);
+        return ResponseEntity.ok(updatedEntree);
+    }
+
+    @DeleteMapping("/{managerId}/restaurant/entrees/{entreeId}")
+    public ResponseEntity<Void> deleteEntree(
+            @PathVariable Long managerId,
+            @PathVariable Long entreeId
+    ) {
+        Optional<User> manager = managerService.getManagerById(managerId);
+        if (manager.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        entreeService.deleteEntree(entreeId);
+        return ResponseEntity.noContent().build();
+    }
 
 
     // ========== Gestion Plats ==========
@@ -190,21 +215,21 @@ public class ManagerController {
             return ResponseEntity.notFound().build();
         }
 
-        plat.setManager(manager.get());  // Ajout de cette ligne comme pour les entrées
+        plat.setManager(manager.get());
         Plat savedPlat = platService.savePlat(plat);
         return ResponseEntity.ok(savedPlat);
     }
 
     @GetMapping("/{managerId}/restaurant/plats")
-    public ResponseEntity<List<Plat>> getPlats(@PathVariable Long managerId) {  // Ajout du paramètre
+    public ResponseEntity<List<Plat>> getPlats(@PathVariable Long managerId) {
         Optional<User> manager = managerService.getManagerById(managerId);
         if (manager.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(platService.getPlatsByManagerId(managerId));  // Utilisation de la nouvelle méthode
+        return ResponseEntity.ok(platService.getPlatsByManagerId(managerId));
     }
 
-    @PutMapping("/{managerId}/restaurant/plats/{platId}")  // Ajout de cet endpoint
+    @PutMapping("/{managerId}/restaurant/plats/{platId}")
     public ResponseEntity<Plat> updatePlat(
             @PathVariable Long managerId,
             @PathVariable Long platId,

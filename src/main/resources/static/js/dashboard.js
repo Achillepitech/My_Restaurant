@@ -6,14 +6,70 @@ document.getElementById('debugManagerId').textContent = MANAGER_ID;
 document.getElementById('debugApiUrl').textContent = API_BASE_URL;
 
 function displayResponse(data, isError = false) {
-    const responseElement = document.getElementById('apiResponse');
-    if (isError) {
-        responseElement.style.color = 'red';
-    } else {
-        responseElement.style.color = 'black';
+    if (typeof data === 'string') {
+        // Afficher le toast pour les messages de statut
+        const toast = new bootstrap.Toast(document.getElementById('statusToast'));
+        const toastBody = document.getElementById('apiResponse');
+        toastBody.className = isError ? 'toast-body text-danger' : 'toast-body text-success';
+        toastBody.textContent = data;
+        toast.show();
+    } else if (data.data && typeof data.data === 'object') {
+        // Afficher les informations du restaurant dans la carte
+        const restaurantInfo = document.getElementById('restaurantInfo');
+        const restaurant = data.data;
+
+
+        restaurantInfo.innerHTML = `
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="d-flex align-items-center mb-4">
+                <i class="bi bi-building fs-2 me-3 text-primary"></i>
+                <h4 class="card-title mb-0">${restaurant.nom || '-'}</h4>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="p-3 border rounded bg-light">
+                        <h6 class="text-primary mb-3">Coordonnées</h6>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-envelope me-2"></i>
+                            <span>${restaurant.manager?.email || '-'}</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-person me-2"></i>
+                            <span>${restaurant.manager?.username || '-'}</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-geo-alt me-2"></i>
+                            <span>${restaurant.adresse || '-'}, ${restaurant.ville || '-'}</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-telephone me-2"></i>
+                            <span>${restaurant.telephone || '-'}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="p-3 border rounded bg-light">
+                        <h6 class="text-primary mb-3">Description</h6>
+                        <p class="mb-0">${restaurant.description || 'Aucune description disponible'}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <div class="p-3 border rounded bg-light">
+                    <h6 class="text-primary mb-3">Présentation</h6>
+                    <p class="mb-0">${restaurant.presentationText || 'Aucune présentation disponible'}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+        `;
     }
-    responseElement.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
 }
+
 
 function getRestaurantData() {
     const data = {
@@ -25,11 +81,7 @@ function getRestaurantData() {
         ville: document.getElementById('ville').value,
         presentationText: document.getElementById('presentationText').value,
         heuresOuverture: {},
-        manager: {
-            id: MANAGER_ID,
-            username: document.getElementById('managerUsername').value,
-            email: document.getElementById('managerEmail').value
-        }
+
     };
     console.log('Données à envoyer:', data);
     return data;
@@ -55,12 +107,6 @@ async function loadRestaurantInfo() {
         document.getElementById('ville').value = data.ville || '';
         document.getElementById('description').value = data.description || '';
         document.getElementById('presentationText').value = data.presentationText || '';
-
-        // Informations manager
-        if (data.manager) {
-            document.getElementById('managerUsername').value = data.manager.username || '';
-            document.getElementById('managerEmail').value = data.manager.email || '';
-        }
 
         displayResponse({
             message: 'Données chargées avec succès',

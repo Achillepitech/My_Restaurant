@@ -30,10 +30,10 @@
 <!-- Contenu -->
 <div class="container mt-4">
     <section id="admin" class="mb-5">
-        <h2>Informations du Restaurant</h2>
+        <h2> <br> Informations du Restaurant</h2>
 
         <div class="alert alert-info">
-            Manager ID: <span id="debugManagerId"></span>
+            À enlever après l'authentification Manager ID: <span id="debugManagerId"></span>
             <br>
             API URL: <span id="debugApiUrl"></span>
         </div>
@@ -79,26 +79,10 @@
                     </div>
 
                     <!-- Informations Manager -->
-                    <div class="card mt-4 mb-3">
-                        <div class="card-header">
-                            <h4>Informations Manager</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label class="form-label">Username</label>
-                                    <input type="text" class="form-control" id="managerUsername" readonly>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="managerEmail" readonly>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
 
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-primary" onclick="loadRestaurantInfo()">Recharger</button>
+
                         <button type="button" class="btn btn-warning" onclick="updateRestaurant()">Mettre à jour</button>
                     </div>
                 </form>
@@ -106,15 +90,27 @@
         </div>
 
         <!-- Zone de réponse -->
-        <div class="card">
-            <div class="card-header">
-                <h3>Statut</h3>
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Informations du Restaurant</h3>
             </div>
             <div class="card-body">
-                <pre id="apiResponse" class="bg-light p-3"></pre>
+                <div id="restaurantInfo">
+                    <!-- Les informations seront injectées ici via JavaScript -->
+                </div>
             </div>
         </div>
 
+        <!-- Toast pour les notifications -->
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="statusToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <strong class="me-auto">Notification</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body" id="apiResponse"></div>
+            </div>
+        </div>
 
 
     </section>
