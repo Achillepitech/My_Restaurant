@@ -47,34 +47,32 @@ function updateHeuresOuverture(heures) {
 // Fonction pour récupérer et afficher les menus
 async function getMenus() {
     try {
+        // Utilisation du bon endpoint défini dans l'API
         const response = await fetch(`${API_BASE_URL}/menus`);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const menus = await response.json();
 
         const menuDiv = document.getElementById('menu');
         menuDiv.innerHTML = '';
 
-        menus.forEach(menu => {
-            if (menu.actif) { // N'afficher que les menus actifs
-                const menuHTML = `
-                    <div class="menu-card">
-                        <div class="menu-content">
-                            <h3 class="menu-title">${menu.nom}</h3>
-                            <div class="menu-description">
-                                <p>${menu.description || 'Description non disponible'}</p>
-                            </div>
-                            <div class="menu-price-container">
-                                <span class="menu-price">${menu.prix.toFixed(2)} €</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                menuDiv.innerHTML += menuHTML;
-            }
-        });
+        // Filtre pour n'afficher que les menus actifs
+        const activeMenus = menus.filter(menu => menu.actif);
 
-        if (menuDiv.innerHTML === '') {
-            menuDiv.innerHTML = '<p>Aucun menu actif disponible</p>';
+        if (activeMenus.length === 0) {
+            menuDiv.innerHTML = '<p>Aucun menu disponible</p>';
+            return;
         }
+
+        activeMenus.forEach(menu => {
+            const menuHTML = `
+                <div class="plat-card">
+                    <h3>${menu.nom || 'Sans nom'}</h3>
+                    <p class="description">${menu.description || 'Description non disponible'}</p>
+                    <div class="prix">${menu.prix ? menu.prix.toFixed(2) + ' €' : 'Prix non disponible'}</div>
+                </div>
+            `;
+            menuDiv.innerHTML += menuHTML;
+        });
     } catch (error) {
         console.error('Erreur lors du chargement des menus:', error);
         const menuDiv = document.getElementById('menu');
@@ -187,5 +185,6 @@ document.addEventListener('DOMContentLoaded', () => {
     getEntrees();
     getPlats();
     getDesserts();
+    getMenus();
 });
 

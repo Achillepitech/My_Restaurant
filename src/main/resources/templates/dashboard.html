@@ -22,6 +22,10 @@
                 <li class="nav-item"><a class="nav-link" href="#plats">Plats</a></li>
                 <li class="nav-item"><a class="nav-link" href="#desserts">Desserts</a></li>
                 <li class="nav-item"><a class="nav-link" href="#menus">Menus</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/">Vew My Restaurent site</a></li>
+            </ul>
+            <ul>
+                <li class="nav-item"><a class="nav-link active" href="/dashboard">Vew My Restaurent site</a></li>
             </ul>
         </div>
     </div>
@@ -68,6 +72,7 @@
                         <input type="tel" class="form-control" id="telephone">
                     </div>
 
+                    <div>
                     <div class="mb-3">
                         <label for="description" class="form-label">Description</label>
                         <textarea class="form-control" id="description" rows="3"></textarea>
@@ -77,6 +82,46 @@
                         <label for="presentationText" class="form-label">Texte de Présentation</label>
                         <textarea class="form-control" id="presentationText" rows="3"></textarea>
                     </div>
+
+                        <div class="mb-3">
+                            <label class="form-label-strong">Heures d'ouverture</label>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="mb-2">
+                                        <label class="form-label">Lundi</label>
+                                        <input type="text" class="form-control" id="horaire-lundi" placeholder="ex: 12:00-14:30, 19:00-22:30">
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label">Mardi</label>
+                                        <input type="text" class="form-control" id="horaire-mardi" placeholder="ex: 12:00-14:30, 19:00-22:30">
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label">Mercredi</label>
+                                        <input type="text" class="form-control" id="horaire-mercredi" placeholder="ex: 12:00-14:30, 19:00-22:30">
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label">Jeudi</label>
+                                        <input type="text" class="form-control" id="horaire-jeudi" placeholder="ex: 12:00-14:30, 19:00-22:30">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-2">
+                                        <label class="form-label">Vendredi</label>
+                                        <input type="text" class="form-control" id="horaire-vendredi" placeholder="ex: 12:00-14:30, 19:00-22:30">
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label">Samedi</label>
+                                        <input type="text" class="form-control" id="horaire-samedi" placeholder="ex: 12:00-14:30, 19:00-22:30">
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label">Dimanche</label>
+                                        <input type="text" class="form-control" id="horaire-dimanche" placeholder="ex: Fermé">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
 
                     <!-- Informations Manager -->
 
@@ -119,7 +164,7 @@
 
         <!-- Liste des entrées -->
         <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="card-header d-flex justify-content-between align-items-end">
                 <h3 class="mb-0">Liste des Entrées</h3>
                 <button class="btn btn-primary" onclick="showAddForm()">Ajouter une entrée</button>
             </div>
@@ -180,7 +225,7 @@
     <section id="plats" class="mb-5">
         <!-- Liste des plats -->
         <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="card-header d-flex justify-content-between align-items-end">
                 <h3 class="mb-0">Liste des Plats</h3>
                 <button class="btn btn-primary" onclick="showAddPlatForm()">Ajouter un plat</button>
             </div>
@@ -247,7 +292,7 @@
 
         <!-- Liste des desserts -->
         <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="card-header d-flex justify-content-between align-items-end">
                 <h3 class="mb-0">Liste des Desserts</h3>
                 <button class="btn btn-primary" onclick="showAddDessertForm()">Ajouter un dessert</button>
             </div>
@@ -312,7 +357,7 @@
 
         <!-- Liste des menus -->
         <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="card-header d-flex justify-content-between align-items-end">
                 <h3 class="mb-0">Liste des Menus du Jour</h3>
                 <button class="btn btn-primary" onclick="showAddMenuForm()">Ajouter un menu</button>
             </div>

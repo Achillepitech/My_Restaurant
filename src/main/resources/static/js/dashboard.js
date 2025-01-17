@@ -80,12 +80,19 @@ function getRestaurantData() {
         telephone: document.getElementById('telephone').value,
         ville: document.getElementById('ville').value,
         presentationText: document.getElementById('presentationText').value,
-        heuresOuverture: {},
-
+        heuresOuverture: {
+            lundi: document.getElementById('horaire-lundi').value || '',
+            mardi: document.getElementById('horaire-mardi').value || '',
+            mercredi: document.getElementById('horaire-mercredi').value || '',
+            jeudi: document.getElementById('horaire-jeudi').value || '',
+            vendredi: document.getElementById('horaire-vendredi').value || '',
+            samedi: document.getElementById('horaire-samedi').value || '',
+            dimanche: document.getElementById('horaire-dimanche').value || ''
+        }
     };
-    console.log('Données à envoyer:', data);
     return data;
 }
+
 
 async function loadRestaurantInfo() {
     try {
@@ -99,7 +106,7 @@ async function loadRestaurantInfo() {
         const data = await response.json();
         console.log('Données reçues:', data);
 
-        // Remplir le formulaire avec les données reçues
+        // Remplir les champs existants
         document.getElementById('restaurantId').value = data.id || '';
         document.getElementById('nom').value = data.nom || '';
         document.getElementById('adresse').value = data.adresse || '';
@@ -107,6 +114,17 @@ async function loadRestaurantInfo() {
         document.getElementById('ville').value = data.ville || '';
         document.getElementById('description').value = data.description || '';
         document.getElementById('presentationText').value = data.presentationText || '';
+
+        // Remplir les horaires
+        if (data.heuresOuverture) {
+            document.getElementById('horaire-lundi').value = data.heuresOuverture.lundi || '';
+            document.getElementById('horaire-mardi').value = data.heuresOuverture.mardi || '';
+            document.getElementById('horaire-mercredi').value = data.heuresOuverture.mercredi || '';
+            document.getElementById('horaire-jeudi').value = data.heuresOuverture.jeudi || '';
+            document.getElementById('horaire-vendredi').value = data.heuresOuverture.vendredi || '';
+            document.getElementById('horaire-samedi').value = data.heuresOuverture.samedi || '';
+            document.getElementById('horaire-dimanche').value = data.heuresOuverture.dimanche || '';
+        }
 
         displayResponse({
             message: 'Données chargées avec succès',
@@ -117,6 +135,8 @@ async function loadRestaurantInfo() {
         displayResponse(`Erreur de chargement: ${error.message}`, true);
     }
 }
+
+
 
 async function updateRestaurant() {
     try {

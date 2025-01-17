@@ -1,6 +1,9 @@
 
 
+*{
 
+
+}
 :root {
     --primary-color: #2c2c2c;
     --secondary-color: #888;
@@ -27,7 +30,6 @@ body {
     font-family: 'Inter', sans-serif;
     line-height: 1.6;
     margin: 0;
-    background-color: var(--background-color);
 }
 
 .container {
@@ -42,7 +44,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
+    color: #cbe4f6;
     text-align: center;
 }
 
