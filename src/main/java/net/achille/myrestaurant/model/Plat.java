@@ -16,19 +16,17 @@ public class Plat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String nom;
     private String description;
     private Double prix;
-
-    @Column(nullable = false)
-    private Boolean actif = true;
+    private Boolean actif;
 
     @ManyToOne
     @JoinColumn(name = "manager_id")
+    @JsonIgnoreProperties({"entrees", "plats", "desserts", "menus", "managedRestaurant"})
     private User manager;
 
     @ManyToMany(mappedBy = "plats")
-    @JsonIgnoreProperties("plats")
+    @JsonIgnoreProperties({"entrees", "plats", "desserts", "manager"})
     private List<MenuDuJourNew> menus;
 }

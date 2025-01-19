@@ -17,14 +17,16 @@ public class Dessert {
     private Long id;
     private String nom;
     private Double prix;
+
     @Column(length = 1000)
     private String description;
 
     @ManyToOne
     @JoinColumn(name = "manager_id", referencedColumnName = "id")
+    @JsonIgnoreProperties({"entrees", "plats", "desserts", "menus", "managedRestaurant"})
     private User manager;
 
     @ManyToMany(mappedBy = "desserts")
-    @JsonIgnoreProperties("desserts")
+    @JsonIgnoreProperties({"entrees", "plats", "desserts", "manager"})
     private List<MenuDuJourNew> menus;
 }

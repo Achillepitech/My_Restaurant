@@ -27,8 +27,8 @@ public class ManagerController {
     @Autowired
     private DessertService dessertService;
 
-    @Autowired
-    private MenuDuJourService menuDuJourService;
+//    @Autowired
+//    private MenuDuJourService menuDuJourService;
 
     // ========== CRUD Manager ==========
 
@@ -321,16 +321,100 @@ public class ManagerController {
         return ResponseEntity.noContent().build();
     }
 
+//
+//    // ========== Gestion Menus ==========
+//
+//
+//
+//
+//    @PostMapping("/{managerId}/restaurant/menus")
+//    public ResponseEntity<MenuDuJour> createMenu(
+//            @PathVariable Long managerId,
+//            @RequestBody MenuDuJour menu
+//    ) {
+//        Optional<User> manager = managerService.getManagerById(managerId);
+//        if (manager.isEmpty()) {
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//        menu.setManager(manager.get());
+//        MenuDuJour savedMenu = menuDuJourService.createMenu(menu);
+//        return ResponseEntity.ok(savedMenu);
+//    }
+//
+//    @GetMapping("/{managerId}/restaurant/menus")
+//    public ResponseEntity<List<MenuDuJour>> getAllMenus(@PathVariable Long managerId) {
+//        Optional<User> manager = managerService.getManagerById(managerId);
+//        if (manager.isEmpty()) {
+//            return ResponseEntity.notFound().build();
+//        }
+//        return ResponseEntity.ok(menuDuJourService.getMenusByManagerId(managerId));
+//    }
+//
+//    @GetMapping("/{managerId}/restaurant/menus/{menuId}")
+//    public ResponseEntity<MenuDuJour> getMenuById(
+//            @PathVariable Long managerId,
+//            @PathVariable Long menuId
+//    ) {
+//        Optional<User> manager = managerService.getManagerById(managerId);
+//        if (manager.isEmpty()) {
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//        MenuDuJour menu = menuDuJourService.getMenuById(menuId);
+//        return ResponseEntity.ok(menu);
+//    }
+//
+//    @PutMapping("/{managerId}/restaurant/menus/{menuId}")
+//    public ResponseEntity<MenuDuJour> updateMenu(
+//            @PathVariable Long managerId,
+//            @PathVariable Long menuId,
+//            @RequestBody MenuDuJour menu
+//    ) {
+//        Optional<User> manager = managerService.getManagerById(managerId);
+//        if (manager.isEmpty()) {
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//        menu.setId(menuId);
+//        menu.setManager(manager.get());
+//        MenuDuJour updatedMenu = menuDuJourService.createMenu(menu);
+//        return ResponseEntity.ok(updatedMenu);
+//    }
+//
+//    @DeleteMapping("/{managerId}/restaurant/menus/{menuId}")
+//    public ResponseEntity<Void> deleteMenu(
+//            @PathVariable Long managerId,
+//            @PathVariable Long menuId
+//    ) {
+//        Optional<User> manager = managerService.getManagerById(managerId);
+//        if (manager.isEmpty()) {
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//        menuDuJourService.deleteMenu(menuId);
+//        return ResponseEntity.noContent().build();
+//    }
 
-    // ========== Gestion Menus ==========
+//    // ========== Gestion NewMenus ==========
 
+    @Autowired
+    private MenuDuJourNewService menuDuJourNewService;
 
+    // Ajoutez ces nouvelles méthodes à la fin de la classe ManagerController
+    //http://localhost:8080/managers/1/restaurant/menus-new
+    //
+    //{
+    //  "title": "Menus-new",
+    //  "description": "Comprend une entrée, un plat, et un dessert.",
+    //  "price": 25.99
+    //}
+    //
 
-
-    @PostMapping("/{managerId}/restaurant/menus")
-    public ResponseEntity<MenuDuJour> createMenu(
+    @PostMapping("/{managerId}/restaurant/menus-new")
+    public ResponseEntity<MenuDuJourNew> createMenuNew(
             @PathVariable Long managerId,
-            @RequestBody MenuDuJour menu
+            @RequestBody MenuDuJourNew menu
     ) {
         Optional<User> manager = managerService.getManagerById(managerId);
         if (manager.isEmpty()) {
@@ -338,21 +422,23 @@ public class ManagerController {
         }
 
         menu.setManager(manager.get());
-        MenuDuJour savedMenu = menuDuJourService.createMenu(menu);
+        MenuDuJourNew savedMenu = menuDuJourNewService.saveMenu(menu);
         return ResponseEntity.ok(savedMenu);
     }
 
-    @GetMapping("/{managerId}/restaurant/menus")
-    public ResponseEntity<List<MenuDuJour>> getAllMenus(@PathVariable Long managerId) {
+
+
+    @GetMapping("/{managerId}/restaurant/menus-new")
+    public ResponseEntity<List<MenuDuJourNew>> getAllMenusNew(@PathVariable Long managerId) {
         Optional<User> manager = managerService.getManagerById(managerId);
         if (manager.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(menuDuJourService.getMenusByManagerId(managerId));
+        return ResponseEntity.ok(menuDuJourNewService.getMenusByManagerId(managerId));
     }
 
-    @GetMapping("/{managerId}/restaurant/menus/{menuId}")
-    public ResponseEntity<MenuDuJour> getMenuById(
+    @GetMapping("/{managerId}/restaurant/menus-new/{menuId}")
+    public ResponseEntity<MenuDuJourNew> getMenuNewById(
             @PathVariable Long managerId,
             @PathVariable Long menuId
     ) {
@@ -361,15 +447,16 @@ public class ManagerController {
             return ResponseEntity.notFound().build();
         }
 
-        MenuDuJour menu = menuDuJourService.getMenuById(menuId);
-        return ResponseEntity.ok(menu);
+        Optional<MenuDuJourNew> menu = menuDuJourNewService.getMenuById(menuId);
+        return menu.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{managerId}/restaurant/menus/{menuId}")
-    public ResponseEntity<MenuDuJour> updateMenu(
+    @PutMapping("/{managerId}/restaurant/menus-new/{menuId}")
+    public ResponseEntity<MenuDuJourNew> updateMenuNew(
             @PathVariable Long managerId,
             @PathVariable Long menuId,
-            @RequestBody MenuDuJour menu
+            @RequestBody MenuDuJourNew menu
     ) {
         Optional<User> manager = managerService.getManagerById(managerId);
         if (manager.isEmpty()) {
@@ -378,12 +465,12 @@ public class ManagerController {
 
         menu.setId(menuId);
         menu.setManager(manager.get());
-        MenuDuJour updatedMenu = menuDuJourService.createMenu(menu);
+        MenuDuJourNew updatedMenu = menuDuJourNewService.saveMenu(menu);
         return ResponseEntity.ok(updatedMenu);
     }
 
-    @DeleteMapping("/{managerId}/restaurant/menus/{menuId}")
-    public ResponseEntity<Void> deleteMenu(
+    @DeleteMapping("/{managerId}/restaurant/menus-new/{menuId}")
+    public ResponseEntity<Void> deleteMenuNew(
             @PathVariable Long managerId,
             @PathVariable Long menuId
     ) {
@@ -392,12 +479,240 @@ public class ManagerController {
             return ResponseEntity.notFound().build();
         }
 
-        menuDuJourService.deleteMenu(menuId);
+        menuDuJourNewService.deleteMenu(menuId);
         return ResponseEntity.noContent().build();
     }
 
+    // Endpoints pour gérer les relations Crud plats
+    //http://localhost:8080/managers/1/restaurant/menus-new/1/plats1
+
+    @PostMapping("/{managerId}/restaurant/menus-new/{menuId}/plats/{platId}")
+    public ResponseEntity<MenuDuJourNew> addPlatToMenu(
+            @PathVariable Long managerId,
+            @PathVariable Long menuId,
+            @PathVariable Long platId
+    ) {
+        Optional<User> manager = managerService.getManagerById(managerId);
+        if (manager.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        MenuDuJourNew updatedMenu = menuDuJourNewService.addPlatToMenu(menuId, platId);
+        return ResponseEntity.ok(updatedMenu);
+    }
+
+    @GetMapping("/{managerId}/restaurant/menus-new/{menuId}/plats")
+    public ResponseEntity<List<Plat>> getPlatsByMenu(
+            @PathVariable Long managerId,
+            @PathVariable Long menuId
+    ) {
+        Optional<User> manager = managerService.getManagerById(managerId);
+        if (manager.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Optional<MenuDuJourNew> menu = menuDuJourNewService.getMenuById(menuId);
+        if (menu.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(menu.get().getPlats());
+    }
+
+    @GetMapping("/{managerId}/restaurant/menus-new/{menuId}/plats/{platId}")
+    public ResponseEntity<Plat> getPlatFromMenu(
+            @PathVariable Long managerId,
+            @PathVariable Long menuId,
+            @PathVariable Long platId
+    ) {
+        Optional<User> manager = managerService.getManagerById(managerId);
+        if (manager.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Optional<MenuDuJourNew> menu = menuDuJourNewService.getMenuById(menuId);
+        if (menu.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Optional<Plat> plat = menu.get().getPlats().stream()
+                .filter(p -> p.getId().equals(platId))
+                .findFirst();
+
+        return plat.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{managerId}/restaurant/menus-new/{menuId}/plats/{platId}")
+    public ResponseEntity<MenuDuJourNew> removePlatFromMenu(
+            @PathVariable Long managerId,
+            @PathVariable Long menuId,
+            @PathVariable Long platId
+    ) {
+        Optional<User> manager = managerService.getManagerById(managerId);
+        if (manager.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        MenuDuJourNew updatedMenu = menuDuJourNewService.removePlatFromMenu(menuId, platId);
+        return ResponseEntity.ok(updatedMenu);
+    }
+
+
+    // ========== Gestion des relations Entrées-Menu ==========
+
+
+    // add new-entre
+    //http://localhost:8080/managers/1/restaurant/menus-new/1/entrees/2
+    @PostMapping("/{managerId}/restaurant/menus-new/{menuId}/entrees/{entreeId}")
+    public ResponseEntity<MenuDuJourNew> addEntreeToMenu(
+            @PathVariable Long managerId,
+            @PathVariable Long menuId,
+            @PathVariable Long entreeId
+    ) {
+        Optional<User> manager = managerService.getManagerById(managerId);
+        if (manager.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        MenuDuJourNew updatedMenu = menuDuJourNewService.addEntreeToMenu(menuId, entreeId);
+        return ResponseEntity.ok(updatedMenu);
+    }
+
+    @GetMapping("/{managerId}/restaurant/menus-new/{menuId}/entrees")
+    public ResponseEntity<List<Entree>> getEntreesByMenu(
+            @PathVariable Long managerId,
+            @PathVariable Long menuId
+    ) {
+        Optional<User> manager = managerService.getManagerById(managerId);
+        if (manager.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Optional<MenuDuJourNew> menu = menuDuJourNewService.getMenuById(menuId);
+        if (menu.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(menu.get().getEntrees());
+    }
+
+    @GetMapping("/{managerId}/restaurant/menus-new/{menuId}/entrees/{entreeId}")
+    public ResponseEntity<Entree> getEntreeFromMenu(
+            @PathVariable Long managerId,
+            @PathVariable Long menuId,
+            @PathVariable Long entreeId
+    ) {
+        Optional<User> manager = managerService.getManagerById(managerId);
+        if (manager.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Optional<MenuDuJourNew> menu = menuDuJourNewService.getMenuById(menuId);
+        if (menu.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Optional<Entree> entree = menu.get().getEntrees().stream()
+                .filter(e -> e.getId().equals(entreeId))
+                .findFirst();
+
+        return entree.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{managerId}/restaurant/menus-new/{menuId}/entrees/{entreeId}")
+    public ResponseEntity<MenuDuJourNew> removeEntreeFromMenu(
+            @PathVariable Long managerId,
+            @PathVariable Long menuId,
+            @PathVariable Long entreeId
+    ) {
+        Optional<User> manager = managerService.getManagerById(managerId);
+        if (manager.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        MenuDuJourNew updatedMenu = menuDuJourNewService.removeEntreeFromMenu(menuId, entreeId);
+        return ResponseEntity.ok(updatedMenu);
+    }
+
+
+    // ========== Gestion des relations Desserts-Menu ==========
+
+    @PostMapping("/{managerId}/restaurant/menus-new/{menuId}/desserts/{dessertId}")
+    public ResponseEntity<MenuDuJourNew> addDessertToMenu(
+            @PathVariable Long managerId,
+            @PathVariable Long menuId,
+            @PathVariable Long dessertId
+    ) {
+        Optional<User> manager = managerService.getManagerById(managerId);
+        if (manager.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        MenuDuJourNew updatedMenu = menuDuJourNewService.addDessertToMenu(menuId, dessertId);
+        return ResponseEntity.ok(updatedMenu);
+    }
+
+    @GetMapping("/{managerId}/restaurant/menus-new/{menuId}/desserts")
+    public ResponseEntity<List<Dessert>> getDessertsByMenu(
+            @PathVariable Long managerId,
+            @PathVariable Long menuId
+    ) {
+        Optional<User> manager = managerService.getManagerById(managerId);
+        if (manager.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Optional<MenuDuJourNew> menu = menuDuJourNewService.getMenuById(menuId);
+        if (menu.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(menu.get().getDesserts());
+    }
+
+    @GetMapping("/{managerId}/restaurant/menus-new/{menuId}/desserts/{dessertId}")
+    public ResponseEntity<Dessert> getDessertFromMenu(
+            @PathVariable Long managerId,
+            @PathVariable Long menuId,
+            @PathVariable Long dessertId
+    ) {
+        Optional<User> manager = managerService.getManagerById(managerId);
+        if (manager.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Optional<MenuDuJourNew> menu = menuDuJourNewService.getMenuById(menuId);
+        if (menu.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Optional<Dessert> dessert = menu.get().getDesserts().stream()
+                .filter(d -> d.getId().equals(dessertId))
+                .findFirst();
+
+        return dessert.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{managerId}/restaurant/menus-new/{menuId}/desserts/{dessertId}")
+    public ResponseEntity<MenuDuJourNew> removeDessertFromMenu(
+            @PathVariable Long managerId,
+            @PathVariable Long menuId,
+            @PathVariable Long dessertId
+    ) {
+        Optional<User> manager = managerService.getManagerById(managerId);
+        if (manager.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        MenuDuJourNew updatedMenu = menuDuJourNewService.removeDessertFromMenu(menuId, dessertId);
+        return ResponseEntity.ok(updatedMenu);
+    }
 
 }
 
 
-//
+
+

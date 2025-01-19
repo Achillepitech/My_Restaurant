@@ -26,10 +26,10 @@ public class Entree {
 
     @ManyToOne
     @JoinColumn(name = "manager_id", referencedColumnName = "id")
+    @JsonIgnoreProperties({"entrees", "plats", "desserts", "menus", "managedRestaurant"})
     private User manager;
 
-    @ManyToMany(mappedBy = "entree")
-    @JsonIgnoreProperties("entree")
-    private List<MenuDuJourNew>menus;
-
+    @ManyToMany(mappedBy = "entrees")
+    @JsonIgnoreProperties({"entrees", "plats", "desserts", "manager"})
+    private List<MenuDuJourNew> menus;
 }

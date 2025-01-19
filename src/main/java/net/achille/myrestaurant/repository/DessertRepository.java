@@ -7,5 +7,7 @@ import java.util.List;
 
 @Repository
 public interface DessertRepository extends JpaRepository<Dessert, Long> {
-    List<Dessert> findByManagerId(Long managerId);  // Ajouter cette méthode
+    List<Dessert> findByManagerId(Long managerId);
+
+    List<Dessert> findByNom(String nom);
 }

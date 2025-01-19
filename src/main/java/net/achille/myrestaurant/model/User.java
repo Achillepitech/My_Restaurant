@@ -37,7 +37,7 @@ public class User {
     @JsonIgnoreProperties("manager")
     private List<Dessert> desserts;
 
-    @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties("manager")
-    private List<MenuDuJour> menusDuJour;
+//    @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JsonIgnoreProperties("manager")
+//    private List<MenuDuJour> menusDuJour;
 }
