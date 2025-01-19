@@ -43,7 +43,7 @@ function updateHeuresOuverture(heures) {
 
     heuresListe.innerHTML = horaireHTML;
 }
-
+/*
 // Fonction pour récupérer et afficher les menus
 async function getMenus() {
     try {
@@ -79,7 +79,7 @@ async function getMenus() {
         menuDiv.innerHTML = '<p>Erreur lors du chargement des menus</p>';
     }
 }
-
+*/
 // Fonction pour récupérer et afficher les entrées
 async function getEntrees() {
     try {

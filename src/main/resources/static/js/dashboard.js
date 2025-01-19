@@ -517,7 +517,7 @@ async function deleteDessert(dessertId) {
     }
 }
 
-let menuModal;
+/* let menuModal;
 
 document.addEventListener('DOMContentLoaded', function() {
     loadRestaurantInfo();
@@ -676,3 +676,105 @@ document.addEventListener('DOMContentLoaded', function() {
         showSection(hash);
     });
 });
+*/
+
+let menuModal;
+
+document.addEventListener('DOMContentLoaded', function() {
+    menuModal = new bootstrap.Modal(document.getElementById('menuModal'));
+    loadMenus();
+});
+
+async function loadMenuSelections() {
+    try {
+        // Charger les entrées
+        const entreesResponse = await fetch(`${API_BASE_URL}/entrees`);
+        const entrees = await entreesResponse.json();
+        const entreesSelect = document.getElementById('menuEntree');
+        entreesSelect.innerHTML = '<option value="">Choisir une entrée</option>' +
+            entrees.map(entree => `<option value="${entree.id}">${entree.nom}</option>`).join('');
+
+        // Charger les plats
+        const platsResponse = await fetch(`${API_BASE_URL}/plats`);
+        const plats = await platsResponse.json();
+        const platsSelect = document.getElementById('menuPlat');
+        platsSelect.innerHTML = '<option value="">Choisir un plat</option>' +
+            plats.map(plat => `<option value="${plat.id}">${plat.nom}</option>`).join('');
+
+        // Charger les desserts
+        const dessertsResponse = await fetch(`${API_BASE_URL}/desserts`);
+        const desserts = await dessertsResponse.json();
+        const dessertsSelect = document.getElementById('menuDessert');
+        dessertsSelect.innerHTML = '<option value="">Choisir un dessert</option>' +
+            desserts.map(dessert => `<option value="${dessert.id}">${dessert.nom}</option>`).join('');
+    } catch (error) {
+        console.error('Erreur chargement sélections:', error);
+    }
+}
+
+function showAddMenuForm() {
+    document.getElementById('menuId').value = '';
+    document.getElementById('menuForm').reset();
+    document.getElementById('menuActif').checked = true;
+    document.getElementById('modalMenuTitle').textContent = 'Ajouter un menu';
+    loadMenuSelections();
+    menuModal.show();
+}
+
+function showEditMenuForm(menu) {
+    document.getElementById('menuId').value = menu.id;
+    document.getElementById('menuNom').value = menu.nom || '';
+    document.getElementById('menuDescription').value = menu.description || '';
+    document.getElementById('menuPrix').value = menu.prix || '';
+    document.getElementById('menuActif').checked = menu.actif;
+    loadMenuSelections();
+
+    // Pré-sélectionner les items si présents
+    if (menu.entrees && menu.entrees[0]) {
+        document.getElementById('menuEntree').value = menu.entrees[0].id;
+    }
+    if (menu.plats && menu.plats[0]) {
+        document.getElementById('menuPlat').value = menu.plats[0].id;
+    }
+    if (menu.desserts && menu.desserts[0]) {
+        document.getElementById('menuDessert').value = menu.desserts[0].id;
+    }
+
+    document.getElementById('modalMenuTitle').textContent = 'Modifier un menu';
+    menuModal.show();
+}
+
+async function loadMenus() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/menus-new`);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const menus = await response.json();
+
+        const tbody = document.getElementById('menusTableBody');
+        tbody.innerHTML = '';
+
+        menus.forEach(menu => {
+            const entree = menu.entrees?.length > 0 ? menu.entrees[0].nom : '-';
+            const plat = menu.plats?.length > 0 ? menu.plats[0].nom : '-';
+            const dessert = menu.desserts?.length > 0 ? menu.desserts[0].nom : '-';
+
+            const row = tbody.insertRow();
+            row.innerHTML = `
+                <td>${menu.nom || '-'}</td>
+                <td>${menu.description || '-'}</td>
+                <td>${menu.prix ? menu.prix.toFixed(2) + ' €' : '-'}</td>
+                <td>
+                    <div>Entrée: ${entree}</div>
+                    <div>Plat: ${plat}</div>
+                    <div>Dessert: ${dessert}</div>
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-warning" onclick='showEditMenuForm(${JSON.stringify(menu)})'>Modifier</button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteMenu(${menu.id})">Supprimer</button>
+                </td>
+            `;
+        });
+    } catch (error) {
+        displayResponse(`Erreur de chargement des menus: ${error.message}`, true);
+    }
+}

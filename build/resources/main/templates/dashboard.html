@@ -73,15 +73,15 @@
                     </div>
 
                     <div>
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea class="form-control" id="description" rows="3"></textarea>
-                    </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" rows="3"></textarea>
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="presentationText" class="form-label">Texte de Présentation</label>
-                        <textarea class="form-control" id="presentationText" rows="3"></textarea>
-                    </div>
+                        <div class="mb-3">
+                            <label for="presentationText" class="form-label">Texte de Présentation</label>
+                            <textarea class="form-control" id="presentationText" rows="3"></textarea>
+                        </div>
 
                         <div class="mb-3">
                             <label class="form-label-strong">Heures d'ouverture</label>
@@ -380,6 +380,43 @@
             </div>
         </div>
 
+<!--        &lt;!&ndash; Modal Formulaire Menu &ndash;&gt;-->
+<!--        <div class="modal fade" id="menuModal" tabindex="-1">-->
+<!--            <div class="modal-dialog modal-lg">-->
+<!--                <div class="modal-content">-->
+<!--                    <div class="modal-header">-->
+<!--                        <h5 class="modal-title" id="modalMenuTitle">Ajouter/Modifier un menu</h5>-->
+<!--                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>-->
+<!--                    </div>-->
+<!--                    <div class="modal-body">-->
+<!--                        <form id="menuForm">-->
+<!--                            <input type="hidden" id="menuId">-->
+<!--                            <div class="mb-3">-->
+<!--                                <label for="menuNom" class="form-label">Nom du menu</label>-->
+<!--                                <input type="text" class="form-control" id="menuNom" required>-->
+<!--                            </div>-->
+<!--                            <div class="mb-3">-->
+<!--                                <label for="menuDescription" class="form-label">Description</label>-->
+<!--                                <textarea class="form-control" id="menuDescription" rows="3" required></textarea>-->
+<!--                            </div>-->
+<!--                            <div class="mb-3">-->
+<!--                                <label for="menuPrix" class="form-label">Prix</label>-->
+<!--                                <input type="number" class="form-control" id="menuPrix" step="0.01" required>-->
+<!--                            </div>-->
+<!--                            <div class="mb-3 form-check">-->
+<!--                                <input type="checkbox" class="form-check-input" id="menuActif" checked>-->
+<!--                                <label class="form-check-label" for="menuActif">Menu actif</label>-->
+<!--                            </div>-->
+<!--                        </form>-->
+<!--                    </div>-->
+<!--                    <div class="modal-footer">-->
+<!--                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>-->
+<!--                        <button type="button" class="btn btn-primary" onclick="saveMenu()">Enregistrer</button>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
         <!-- Modal Formulaire Menu -->
         <div class="modal fade" id="menuModal" tabindex="-1">
             <div class="modal-dialog modal-lg">
@@ -403,6 +440,29 @@
                                 <label for="menuPrix" class="form-label">Prix</label>
                                 <input type="number" class="form-control" id="menuPrix" step="0.01" required>
                             </div>
+
+                            <!-- Sélecteurs pour entrée, plat, dessert -->
+                            <div class="mb-3">
+                                <label for="menuEntree" class="form-label">Entrée</label>
+                                <select class="form-control" id="menuEntree">
+                                    <option value="">Choisir une entrée</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="menuPlat" class="form-label">Plat</label>
+                                <select class="form-control" id="menuPlat">
+                                    <option value="">Choisir un plat</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="menuDessert" class="form-label">Dessert</label>
+                                <select class="form-control" id="menuDessert">
+                                    <option value="">Choisir un dessert</option>
+                                </select>
+                            </div>
+
                             <div class="mb-3 form-check">
                                 <input type="checkbox" class="form-check-input" id="menuActif" checked>
                                 <label class="form-check-label" for="menuActif">Menu actif</label>
@@ -416,6 +476,7 @@
                 </div>
             </div>
         </div>
+
 
 
 
