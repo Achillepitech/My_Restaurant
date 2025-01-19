@@ -687,21 +687,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function loadMenuSelections() {
     try {
-        // Charger les entrées
         const entreesResponse = await fetch(`${API_BASE_URL}/entrees`);
         const entrees = await entreesResponse.json();
         const entreesSelect = document.getElementById('menuEntree');
         entreesSelect.innerHTML = '<option value="">Choisir une entrée</option>' +
             entrees.map(entree => `<option value="${entree.id}">${entree.nom}</option>`).join('');
 
-        // Charger les plats
         const platsResponse = await fetch(`${API_BASE_URL}/plats`);
         const plats = await platsResponse.json();
         const platsSelect = document.getElementById('menuPlat');
         platsSelect.innerHTML = '<option value="">Choisir un plat</option>' +
             plats.map(plat => `<option value="${plat.id}">${plat.nom}</option>`).join('');
 
-        // Charger les desserts
         const dessertsResponse = await fetch(`${API_BASE_URL}/desserts`);
         const desserts = await dessertsResponse.json();
         const dessertsSelect = document.getElementById('menuDessert');
@@ -729,7 +726,6 @@ function showEditMenuForm(menu) {
     document.getElementById('menuActif').checked = menu.actif;
     loadMenuSelections();
 
-    // Pré-sélectionner les items si présents
     if (menu.entrees && menu.entrees[0]) {
         document.getElementById('menuEntree').value = menu.entrees[0].id;
     }
