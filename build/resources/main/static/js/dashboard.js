@@ -774,3 +774,80 @@ async function loadMenus() {
         displayResponse(`Erreur de chargement des menus: ${error.message}`, true);
     }
 }
+
+
+async function saveMenu() {
+    try {
+        const menuId = document.getElementById('menuId').value;
+        const menuData = {
+            id: menuId || null,
+            nom: document.getElementById('menuNom').value,
+            description: document.getElementById('menuDescription').value,
+            prix: parseFloat(document.getElementById('menuPrix').value),
+            actif: document.getElementById('menuActif').checked,
+            manager: {
+                id: MANAGER_ID
+            }
+        };
+
+        // Créer ou mettre à jour le menu
+        const url = menuId ? `${API_BASE_URL}/menus-new/${menuId}` : `${API_BASE_URL}/menus-new`;
+        const method = menuId ? 'PUT' : 'POST';
+
+        const response = await fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(menuData)
+        });
+
+        if (!response.ok) throw new Error('Erreur lors de la sauvegarde du menu');
+        const savedMenu = await response.json();
+
+        // Ajouter les éléments sélectionnés
+        const entreeId = document.getElementById('menuEntree').value;
+        if (entreeId) {
+            await fetch(`${API_BASE_URL}/menus-new/${savedMenu.id}/entrees/${entreeId}`, {
+                method: 'POST'
+            });
+        }
+
+        const platId = document.getElementById('menuPlat').value;
+        if (platId) {
+            await fetch(`${API_BASE_URL}/menus-new/${savedMenu.id}/plats/${platId}`, {
+                method: 'POST'
+            });
+        }
+
+        const dessertId = document.getElementById('menuDessert').value;
+        if (dessertId) {
+            await fetch(`${API_BASE_URL}/menus-new/${savedMenu.id}/desserts/${dessertId}`, {
+                method: 'POST'
+            });
+        }
+
+        displayResponse(`Menu ${menuId ? 'modifié' : 'créé'} avec succès`);
+        menuModal.hide();
+        loadMenus();
+    } catch (error) {
+        displayResponse('Erreur lors de la sauvegarde: ' + error.message, true);
+    }
+}
+
+async function deleteMenu(menuId) {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer ce menu ?')) return;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/menus-new/${menuId}`, {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) throw new Error('Erreur lors de la suppression');
+
+        displayResponse('Menu supprimé avec succès');
+        loadMenus();
+    } catch (error) {
+        displayResponse('Erreur lors de la suppression: ' + error.message, true);
+    }
+}
